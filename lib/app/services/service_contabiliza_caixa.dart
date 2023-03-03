@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:components_ui/components_ui.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ga_proj/app/services/services_functions.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import 'package:ga_proj/app/services/services_functions.dart';
+import 'package:ga_proj/app/store/serviceStore.dart';
 
 class CtbCaixa extends StatefulWidget {
   const CtbCaixa({super.key});
@@ -14,7 +17,18 @@ class CtbCaixa extends StatefulWidget {
 }
 
 class _CtbCaixaState extends State<CtbCaixa> {
-  String? selectedPaymentOption;
+  late ServiceStore serviceContabilizaCaixaStore;
+  late ServiceStore serviceContabilizaCaixaStoreT;
+
+  @override
+  void didChangeDependencies() {
+    serviceContabilizaCaixaStore =
+        Provider.of<ServiceStore>(context, listen: false);
+    serviceContabilizaCaixaStoreT =
+        Provider.of<ServiceStore>(context, listen: true);
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +158,7 @@ class _CtbCaixaState extends State<CtbCaixa> {
                                 FontAwesomeIcons.trash,
                                 color: Colors.red,
                               ),
-                              campo: 'Clienete',
+                              campo: 'Cliente',
                               numero: false,
                               controllador: controlladorCliente,
                             ),
@@ -155,7 +169,8 @@ class _CtbCaixaState extends State<CtbCaixa> {
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 20),
                               child: DropdownButton(
-                                value: selectedPaymentOption,
+                                value: serviceContabilizaCaixaStoreT
+                                    .tipoPagamentoValue,
                                 items: paymentOptions,
                                 hint:
                                     const Text('Selecione a forma de pagamento',
@@ -178,7 +193,10 @@ class _CtbCaixaState extends State<CtbCaixa> {
 
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedPaymentOption = value!;
+                                    serviceContabilizaCaixaStoreT
+                                        .setTipoPagamento(value!);
+                                    print(serviceContabilizaCaixaStore
+                                        .tipoPagamentoValue);
                                   });
                                 },
                               ),
@@ -186,54 +204,62 @@ class _CtbCaixaState extends State<CtbCaixa> {
                             SizedBox(
                               height: MediaQuery.of(context).size.height * .02,
                             ),
-                            Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  child: const Text(
-                                    'Total',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                            Observer(builder: (_) {
+                              return Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    child: const Text(
+                                      'Total',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  child: Text(
-                                    'R\$ $valorTotal',
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    child: Text(
+                                      'R\$ ${serviceContabilizaCaixaStore.valorTotal.replaceAll('.', ',')}',
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              );
+                            }),
                             Container(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 20),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  KitButton(
-                                    decorationButton: const BoxDecoration(
-                                        color: Colors.green),
-                                    height: MediaQuery.of(context).size.height *
-                                        .07,
-                                    width:
-                                        MediaQuery.of(context).size.width * .5,
-                                    widgetCenter: const Text(
-                                      'Salvar',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    ),
-                                    onTap: () {},
-                                  ),
+                                  Observer(builder: (_) {
+                                    return KitButton(
+                                      decorationButton: const BoxDecoration(
+                                          color: Colors.green),
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .07,
+                                      width: MediaQuery.of(context).size.width *
+                                          .5,
+                                      widgetCenter: const Text(
+                                        'Salvar',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      onTap: () async {
+                                        await serviceContabilizaCaixaStore
+                                            .setPathVenda();
+                                      },
+                                    );
+                                  }),
                                 ],
                               ),
                             ),
@@ -278,14 +304,15 @@ class TextFieldCampo extends StatefulWidget {
   String? campo;
   TextEditingController? controllador;
   bool numero;
+
   TextFieldCampo({
     Key? key,
     this.titulo,
     required this.icon,
     required this.icon2,
     this.campo,
-    this.numero = true,
     required this.controllador,
+    this.numero = true,
   }) : super(key: key);
 
   @override
@@ -296,46 +323,37 @@ class _TextFieldCampoState extends State<TextFieldCampo> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
+    final serviceContabilizaCaixaStore =
+        Provider.of<ServiceStore>(context, listen: false);
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: TextField(
-        controller: widget.controllador,
-        onChanged: (value) {
-          if (widget.titulo == "Quantidade" &&
-              controllerPreco.text.isNotEmpty) {
-            setState(() {
-              valorTotal = (double.parse(controlladorValor.text) *
-                      double.parse(controlladorQtd.text) /
-                      100)
-                  .toString();
-            });
-          } else if (widget.titulo == "Preço" &&
-              controlladorQtd.text.isNotEmpty) {
-            setState(() {
-              valorTotal = (double.parse(controlladorValor.text) *
-                      double.parse(controlladorQtd.text) /
-                      100)
-                  .toString();
-            });
-          } else {
-            valorTotal = "0.00";
-          }
-        },
-        keyboardType: !widget.numero
-            ? TextInputType.text
-            : TextInputType.numberWithOptions(decimal: true),
-        decoration: InputDecoration(
-          labelText: widget.titulo,
-          prefixIcon: widget.icon,
-          suffixIcon: IconButton(
-            icon: widget.icon2,
-            onPressed: () {
-              widget.controllador!.text == "";
-            },
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Observer(builder: (_) {
+        return TextField(
+          controller: widget.controllador,
+          onChanged: (value) {
+            serviceContabilizaCaixaStore.setValorTotal();
+          },
+          keyboardType: !widget.numero
+              ? TextInputType.text
+              : const TextInputType.numberWithOptions(decimal: true),
+          decoration: InputDecoration(
+            labelText: widget.titulo,
+            prefixIcon: widget.icon,
+            suffixIcon: IconButton(
+              icon: widget.icon2,
+              onPressed: () {
+                setState(() {
+                  widget.controllador!.text = "";
+                  if (controlladorQtd.text.isEmpty &&
+                      controllerPreco.text.isEmpty) {
+                    serviceContabilizaCaixaStore.valorTotal = "0.00";
+                  }
+                });
+              },
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

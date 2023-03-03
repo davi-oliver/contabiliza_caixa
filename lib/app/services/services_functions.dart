@@ -2,17 +2,21 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
-TextEditingController controlladorValor = TextEditingController();
-TextEditingController controlladorQtd = TextEditingController();
-TextEditingController controlladorCliente = TextEditingController();
-final MoneyMaskedTextController controllerPreco = MoneyMaskedTextController(
-  decimalSeparator: ',', // definir o separador decimal para vírgula
-  thousandSeparator: '.', // definir o separador de milhares para ponto
-  initialValue: 0, // definir o valor inicial do campo de texto
-);
+
+
 var valorTotal = "0,00";
+
+class ServicesFunctions { 
+  BuildContext context;
+  ServicesFunctions(this.context);
+
+
+
+}
 
 class LocalPath {
   Future<String> get _localPath async {
