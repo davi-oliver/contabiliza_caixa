@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-         Provider<ServiceStore>(create: (_) => ServiceStore()),
+        Provider<ServiceStore>(create: (_) => ServiceStore()),
       ],
       child: const MaterialApp(
         localizationsDelegates: [
@@ -28,10 +28,12 @@ class MyApp extends StatelessWidget {
         ],
         supportedLocales: [
           Locale('en', 'US'),
-          Locale('pt', 'BR'), // adicione pt_BR à lista de localidades suportadas
+          Locale(
+              'pt', 'BR'), // adicione pt_BR à lista de localidades suportadas
         ],
         locale: const Locale('pt', 'BR'),
-        home: ViewRelatorio(),
+        // home: ViewRelatorio(),
+        home: CtbCaixa(),
       ),
     );
   }

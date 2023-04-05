@@ -6,10 +6,10 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:mobx/mobx.dart';
 
 import '../services/services_functions.dart';
- part 'serviceStore.g.dart';
- 
-TextEditingController controlladorValor = TextEditingController();
-TextEditingController controlladorQtd = TextEditingController();
+part 'serviceStore.g.dart';
+
+var controlladorValor = TextEditingController();
+var controlladorQtd = TextEditingController();
 TextEditingController controlladorCliente = TextEditingController();
 final MoneyMaskedTextController controllerPreco = MoneyMaskedTextController(
   decimalSeparator: ',', // definir o separador decimal para vírgula
@@ -17,72 +17,75 @@ final MoneyMaskedTextController controllerPreco = MoneyMaskedTextController(
   initialValue: 0, // definir o valor inicial do campo de texto
 );
 
+class ServiceStore = _ServiceStoreBase with _$ServiceStore;
 
- 
- class ServiceStore = _ServiceStoreBase with _$ServiceStore;
- 
- abstract class _ServiceStoreBase with Store {
-
+abstract class _ServiceStoreBase with Store {
   ObservableList<Relatorio> listaCountDiario = ObservableList<Relatorio>();
 
   @observable
-  String? tipoPagamentoValue  ;
+  String? tipoPagamentoValue;
   @observable
   var valorTotal = "0,00";
   @observable
   var valorUnidade = "0,00";
   @observable
   var valorQtd = "0,00";
+  @observable
+  bool loading = false;
 
   @action
-  void setValorTotal( ) {
-    if (controlladorQtd.text.isNotEmpty && controllerPreco.text.isNotEmpty) {
-      valorUnidade = controllerPreco.text;
-      valorQtd = controlladorQtd.text;
-      valorTotal = (double.parse(valorUnidade.replaceAll(".", "").replaceAll(",", ".")) * double.parse(valorQtd)).toStringAsFixed(2).replaceAll(".", ",");
-    } else {
-      valorTotal = "0,00";
-    }
- 
+  void setLoading(_value) {
+    loading = _value;
   }
 
   @action
-  Future<void> setPathVenda() async{
-     
- 
+  void setValorTotal() {
+    if (controlladorQtd.text.isNotEmpty && controllerPreco.text.isNotEmpty) {
+      valorUnidade = controllerPreco.text;
+      valorQtd = controlladorQtd.text;
+      valorTotal =
+          (double.parse(valorUnidade.replaceAll(".", "").replaceAll(",", ".")) *
+                  double.parse(valorQtd))
+              .toStringAsFixed(2)
+              .replaceAll(".", ",");
+    } else {
+      valorTotal = "0,00";
+    }
+  }
+
+  @action
+  Future<void> setPathVenda() async {
     final file = await LocalPath().localEpModificacao;
-    if(await file.exists()){
+    if (await file.exists()) {
       print("Arquivo existe");
       List listaLocal = [];
       listaLocal.addAll(jsonDecode(await file.readAsString()));
 
-       final _json = {
-      "valor_total": valorTotal,
-      "valor_unidade": valorUnidade,
-      "quantidade": valorQtd,
-      "forma_pagamento": tipoPagamentoValue,
-      "cliente": controlladorCliente.text,
-      "data_dia"  : DateTime.now().toString()
-
-    };
-    listaLocal.add(_json);
-    file.writeAsString(jsonEncode(_json));
-    print("Dados salvos no arquivo: ${jsonDecode(await file.readAsString())}");
+      final _json = {
+        "valor_total": valorTotal,
+        "valor_unidade": valorUnidade,
+        "quantidade": valorQtd,
+        "forma_pagamento": tipoPagamentoValue,
+        "cliente": controlladorCliente.text,
+        "data_dia": DateTime.now().toString()
+      };
+      listaLocal.add(_json);
+      file.writeAsString(jsonEncode(_json));
+      print(
+          "Dados salvos no arquivo: ${jsonDecode(await file.readAsString())}");
     }
-   
-     final _json = {
+
+    final _json = {
       "valor_total": valorTotal,
       "valor_unidade": valorUnidade,
       "quantidade": valorQtd,
       "forma_pagamento": tipoPagamentoValue,
       "cliente": controlladorCliente.text,
-      "data_dia"  : DateTime.now().toString()
-
+      "data_dia": DateTime.now().toString()
     };
-    print("jsonMontado? $_json  ") ;
+    print("jsonMontado? $_json  ");
     file.writeAsString(jsonEncode(_json));
     print("Dados salvos no arquivo: ${jsonDecode(await file.readAsString())}");
-   
   }
 
   @action
@@ -98,11 +101,9 @@ final MoneyMaskedTextController controllerPreco = MoneyMaskedTextController(
     }
     print("listaCountDiario: ${listaCountDiario.length}");
   }
+}
 
- }
-
-
- class Relatorio {
+class Relatorio {
   String? valorTotal;
   String? valorUnidade;
   String? quantidade;
