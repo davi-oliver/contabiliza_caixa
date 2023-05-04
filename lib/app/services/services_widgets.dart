@@ -6,8 +6,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ga_proj/app/services/service_contabiliza_caixa.dart';
 import 'package:ga_proj/app/services/services_functions.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
+import 'package:ga_proj/global/globals_fonts.dart';
+import 'package:ga_proj/global/theme/theme_mode.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../global/theme/themedark.dart';
+import '../../global/theme/themeligth.dart';
 
 class ContabilizaCaixaWidgets {
   BuildContext context;
@@ -18,8 +23,6 @@ class ContabilizaCaixaWidgets {
       margin: const EdgeInsets.only(top: 50),
       child: Column(
         children: [
-          appBar(),
-          SizedBox(height: size.height * .15),
           cardBrancoFundo(),
         ],
       ),
@@ -32,17 +35,17 @@ class ContabilizaCaixaWidgets {
         Provider.of<ServiceStore>(context, listen: false);
     final serviceContabilizaCaixaStoreT =
         Provider.of<ServiceStore>(context, listen: true);
+    final theme = ThemeModeApp.of(context);
     return Container(
       width: size.width * .9,
-      height: size.height * .63,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
+            color: theme.accent1.withOpacity(0.09),
+            spreadRadius: 1,
+            blurRadius: 9,
             offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
@@ -62,7 +65,7 @@ class ContabilizaCaixaWidgets {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: theme.secondaryBackground,
                             boxShadow: const [
                               BoxShadow(
                                 color: Colors.black12,
@@ -76,28 +79,19 @@ class ContabilizaCaixaWidgets {
                                 ),
                               )
                             ],
-                            borderRadius: BorderRadius.circular(15)),
+                            borderRadius: BorderRadius.circular(8)),
                         child: Container(
                           margin: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 5),
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                Text(DateTime.now().day.toString(),
+                                    style: FontsThemeModeApp(theme).labelLarge),
                                 Text(
-                                  DateTime.now().day.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                                Text(
-                                  DateFormat("MMM", "pt_BR")
-                                      .format(DateTime.now()),
-                                  style: const TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w900),
-                                ),
+                                    DateFormat("MMM", "pt_BR")
+                                        .format(DateTime.now()),
+                                    style: FontsThemeModeApp(theme).labelLarge),
                               ]),
                         ),
                       ),
@@ -106,30 +100,39 @@ class ContabilizaCaixaWidgets {
                 ),
                 TextFieldCampo(
                   titulo: 'Quantidade',
-                  icon: const Icon(Icons.confirmation_number),
-                  icon2: const Icon(
+                  icon: Icon(
+                    Icons.confirmation_number,
+                    color: theme.accent1,
+                  ),
+                  icon2: Icon(
                     FontAwesomeIcons.trash,
-                    color: Colors.red,
+                    color: theme.error,
                   ),
                   campo: 'Quantidade',
                   controllador: controlladorQtd,
                 ),
                 TextFieldCampo(
                   titulo: 'Preço',
-                  icon: const Icon(Icons.attach_money),
-                  icon2: const Icon(
+                  icon: Icon(
+                    Icons.attach_money,
+                    color: theme.accent1,
+                  ),
+                  icon2: Icon(
                     FontAwesomeIcons.trash,
-                    color: Colors.red,
+                    color: theme.error,
                   ),
                   campo: 'Preço',
                   controllador: controllerPreco,
                 ),
                 TextFieldCampo(
                   titulo: 'Cliente',
-                  icon: const Icon(Icons.person),
-                  icon2: const Icon(
+                  icon: Icon(
+                    Icons.person,
+                    color: theme.accent1,
+                  ),
+                  icon2: Icon(
                     FontAwesomeIcons.trash,
-                    color: Colors.red,
+                    color: theme.error,
                   ),
                   campo: 'Cliente',
                   numero: false,
@@ -144,19 +147,17 @@ class ContabilizaCaixaWidgets {
                     child: DropdownButton(
                       value: serviceContabilizaCaixaStoreT.tipoPagamentoValue,
                       items: paymentOptions,
-                      hint: const Text('Selecione a forma de pagamento',
+                      hint: Text('Selecione a forma de pagamento',
                           // style of the dropdown hint
-                          style: TextStyle(
-                            fontSize: 15,
-                          )),
+                          style: FontsThemeModeApp(theme).headlineSmall),
                       // style of the dropdown items
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
+                      style: FontsThemeModeApp(theme).titleMedium,
                       // style of the dropdown button
-                      dropdownColor: Colors.white,
-                      icon: const Icon(Icons.arrow_drop_down),
+                      dropdownColor: theme.secondaryBackground,
+                      icon: Icon(
+                        Icons.arrow_drop_down,
+                        color: theme.accent1,
+                      ),
                       // center text in the dropdown button
 
                       iconSize: 36,
@@ -164,7 +165,7 @@ class ContabilizaCaixaWidgets {
 
                       onChanged: (value) {
                         serviceContabilizaCaixaStoreT.setTipoPagamento(value!);
-                        print(serviceContabilizaCaixaStore.tipoPagamentoValue);
+                        print(context.read<ServiceStore>().tipoPagamentoValue);
                       },
                     ),
                   );
@@ -178,12 +179,9 @@ class ContabilizaCaixaWidgets {
                       Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
-                        child: const Text(
+                        child: Text(
                           'Total',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                          style: FontsThemeModeApp(theme).titleLarge,
                         ),
                       ),
                       Container(
@@ -191,15 +189,13 @@ class ContabilizaCaixaWidgets {
                             horizontal: 20, vertical: 10),
                         child: Text(
                           'R\$ ${serviceContabilizaCaixaStoreT.valorTotal.replaceAll('.', ',')}',
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                          style: FontsThemeModeApp(theme).titleLarge,
                         ),
                       ),
                     ],
                   );
                 }),
+                botaoSalvar()
               ],
             ),
           ),
@@ -211,7 +207,7 @@ class ContabilizaCaixaWidgets {
   Widget botaoSalvar() {
     final serviceContabilizaCaixaStore =
         Provider.of<ServiceStore>(context, listen: false);
-
+    final theme = ThemeModeApp.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -219,15 +215,14 @@ class ContabilizaCaixaWidgets {
         children: [
           Observer(builder: (_) {
             return KitButton(
-              decorationButton: const BoxDecoration(color: Colors.green),
+              decorationButton: BoxDecoration(
+                  color: theme.tertiary,
+                  borderRadius: BorderRadius.circular(10)),
               height: MediaQuery.of(context).size.height * .07,
               width: MediaQuery.of(context).size.width * .5,
-              widgetCenter: const Text(
+              widgetCenter: Text(
                 'Salvar',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                style: FontsThemeModeApp(theme).buttonStyle,
               ),
               onTap: () async {
                 await serviceContabilizaCaixaStore.setPathVenda();
@@ -236,18 +231,6 @@ class ContabilizaCaixaWidgets {
           }),
         ],
       ),
-    );
-  }
-
-  Widget appBar() {
-    return Row(
-      children: const [
-        Icon(Icons.arrow_back_ios),
-        Text(
-          'Contabiliza Caixa',
-          style: TextStyle(color: Colors.white),
-        ),
-      ],
     );
   }
 }
@@ -278,7 +261,7 @@ class _TextFieldCampoState extends State<TextFieldCampo> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 // TODO IMPLEMENTS CALCULA VALOR  TOTAL
-
+    final theme = ThemeModeApp.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextField(
@@ -298,8 +281,10 @@ class _TextFieldCampoState extends State<TextFieldCampo> {
         keyboardType: !widget.numero
             ? TextInputType.text
             : const TextInputType.numberWithOptions(decimal: true),
+        style: FontsThemeModeApp(theme).headlineMedium,
         decoration: InputDecoration(
           labelText: widget.titulo,
+          labelStyle: FontsThemeModeApp(theme).labelLarge,
           prefixIcon: widget.icon,
           suffixIcon: IconButton(
             icon: widget.icon2,

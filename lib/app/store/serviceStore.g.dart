@@ -73,6 +73,22 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
     });
   }
 
+  late final _$loadingAtom =
+      Atom(name: '_ServiceStoreBase.loading', context: context);
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
   late final _$setPathVendaAsyncAction =
       AsyncAction('_ServiceStoreBase.setPathVenda', context: context);
 
@@ -83,6 +99,17 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
 
   late final _$_ServiceStoreBaseActionController =
       ActionController(name: '_ServiceStoreBase', context: context);
+
+  @override
+  void setLoading(dynamic _value) {
+    final _$actionInfo = _$_ServiceStoreBaseActionController.startAction(
+        name: '_ServiceStoreBase.setLoading');
+    try {
+      return super.setLoading(_value);
+    } finally {
+      _$_ServiceStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setValorTotal() {
@@ -123,7 +150,8 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
 tipoPagamentoValue: ${tipoPagamentoValue},
 valorTotal: ${valorTotal},
 valorUnidade: ${valorUnidade},
-valorQtd: ${valorQtd}
+valorQtd: ${valorQtd},
+loading: ${loading}
     ''';
   }
 }

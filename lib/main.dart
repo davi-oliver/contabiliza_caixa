@@ -5,8 +5,11 @@ import 'package:provider/provider.dart';
 
 import 'app/services/service_contabiliza_caixa.dart';
 import 'app/store/serviceStore.dart';
+import 'global/theme/theme_mode.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 
