@@ -57,19 +57,19 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
     });
   }
 
-  late final _$valorQtdAtom =
-      Atom(name: '_ServiceStoreBase.valorQtd', context: context);
+  late final _$quantidadeAtom =
+      Atom(name: '_ServiceStoreBase.quantidade', context: context);
 
   @override
-  String get valorQtd {
-    _$valorQtdAtom.reportRead();
-    return super.valorQtd;
+  int get quantidade {
+    _$quantidadeAtom.reportRead();
+    return super.quantidade;
   }
 
   @override
-  set valorQtd(String value) {
-    _$valorQtdAtom.reportWrite(value, super.valorQtd, () {
-      super.valorQtd = value;
+  set quantidade(int value) {
+    _$quantidadeAtom.reportWrite(value, super.quantidade, () {
+      super.quantidade = value;
     });
   }
 
@@ -89,14 +89,6 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
     });
   }
 
-  late final _$setPathVendaAsyncAction =
-      AsyncAction('_ServiceStoreBase.setPathVenda', context: context);
-
-  @override
-  Future<void> setPathVenda() {
-    return _$setPathVendaAsyncAction.run(() => super.setPathVenda());
-  }
-
   late final _$_ServiceStoreBaseActionController =
       ActionController(name: '_ServiceStoreBase', context: context);
 
@@ -106,6 +98,28 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
         name: '_ServiceStoreBase.setLoading');
     try {
       return super.setLoading(_value);
+    } finally {
+      _$_ServiceStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setQuantidade() {
+    final _$actionInfo = _$_ServiceStoreBaseActionController.startAction(
+        name: '_ServiceStoreBase.setQuantidade');
+    try {
+      return super.setQuantidade();
+    } finally {
+      _$_ServiceStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setValorUnidade() {
+    final _$actionInfo = _$_ServiceStoreBaseActionController.startAction(
+        name: '_ServiceStoreBase.setValorUnidade');
+    try {
+      return super.setValorUnidade();
     } finally {
       _$_ServiceStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -150,7 +164,7 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
 tipoPagamentoValue: ${tipoPagamentoValue},
 valorTotal: ${valorTotal},
 valorUnidade: ${valorUnidade},
-valorQtd: ${valorQtd},
+quantidade: ${quantidade},
 loading: ${loading}
     ''';
   }

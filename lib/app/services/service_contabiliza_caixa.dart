@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ga_proj/app/services/geradorRelatorio/view_relatorio.dart';
 import 'package:ga_proj/app/services/services_widgets.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/themeligth.dart';
@@ -101,7 +102,10 @@ class _CtbCaixaState extends State<CtbCaixa> with TickerProviderStateMixin {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewRelatorio()));
                             },
                             child: Icon(
                               Icons.arrow_back_ios,
@@ -158,6 +162,10 @@ const List<DropdownMenuItem<String>> paymentOptions = [
   DropdownMenuItem(
     value: 'money',
     child: Text('Dinheiro'),
+  ),
+  DropdownMenuItem(
+    value: 'check',
+    child: Text('A ver'),
   ),
 ];
 

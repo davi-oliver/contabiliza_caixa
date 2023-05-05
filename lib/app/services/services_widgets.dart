@@ -100,6 +100,9 @@ class ContabilizaCaixaWidgets {
                 ),
                 TextFieldCampo(
                   titulo: 'Quantidade',
+                  onChanged: (p0) {
+                    serviceContabilizaCaixaStore.setQuantidade();
+                  },
                   icon: Icon(
                     Icons.confirmation_number,
                     color: theme.accent1,
@@ -113,6 +116,10 @@ class ContabilizaCaixaWidgets {
                 ),
                 TextFieldCampo(
                   titulo: 'Preço',
+                  onChanged: (p0) {
+                    serviceContabilizaCaixaStore.setValorUnidade();
+                    serviceContabilizaCaixaStore.setValorTotal();
+                  },
                   icon: Icon(
                     Icons.attach_money,
                     color: theme.accent1,
@@ -225,7 +232,7 @@ class ContabilizaCaixaWidgets {
                 style: FontsThemeModeApp(theme).buttonStyle,
               ),
               onTap: () async {
-                await serviceContabilizaCaixaStore.setPathVenda();
+                await ServicesFunctions(context).setPathVenda();
               },
             );
           }),
@@ -242,6 +249,7 @@ class TextFieldCampo extends StatefulWidget {
   String? campo;
   TextEditingController? controllador;
   bool numero;
+  Function(String)? onChanged;
   TextFieldCampo({
     Key? key,
     this.titulo,
@@ -249,6 +257,7 @@ class TextFieldCampo extends StatefulWidget {
     required this.icon2,
     this.campo,
     this.numero = true,
+    this.onChanged,
     required this.controllador,
   }) : super(key: key);
 
@@ -266,18 +275,7 @@ class _TextFieldCampoState extends State<TextFieldCampo> {
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextField(
         controller: widget.controllador,
-        onChanged: (value) {
-          if (widget.titulo == "Preço" && controlladorValor.text.isNotEmpty) {
-            setState(() {
-              valorTotal = (double.parse(controlladorValor.text) *
-                      double.parse(controlladorQtd.text) /
-                      100)
-                  .toString();
-            });
-          } else {
-            valorTotal = "0.00";
-          }
-        },
+        onChanged: widget.onChanged,
         keyboardType: !widget.numero
             ? TextInputType.text
             : const TextInputType.numberWithOptions(decimal: true),
