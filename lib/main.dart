@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         ],
         locale: const Locale('pt', 'BR'),
         // home: ViewRelatorio(),
-        home: CtbCaixa(),
+        home: ViewRelatorio(),
       ),
     );
   }
