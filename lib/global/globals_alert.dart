@@ -73,13 +73,12 @@ class GlobalsAlert {
       animationType: AnimationType.fromTop,
       isCloseButton: true,
       isOverlayTapDismiss: false,
+      backgroundColor: ThemeModeApp.of(context).primaryBackground,
       descStyle: const TextStyle(fontWeight: FontWeight.bold),
       animationDuration: const Duration(milliseconds: 400),
       alertBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
-        side: const BorderSide(
-          color: Colors.grey,
-        ),
+        side: BorderSide(color: ThemeModeApp.of(context).primaryBackground),
       ),
       titleStyle: FontsThemeModeApp(ThemeModeApp.of(context)).titleMedium,
       overlayColor: const Color(0x55000000),
@@ -90,14 +89,13 @@ class GlobalsAlert {
       type: AlertType.success,
       closeIcon: Icon(
         Icons.close,
-        color: Colors.black,
+        color: ThemeModeApp.of(context).primary,
       ),
       title: titulo,
       content: Column(
         children: [
           Text(texto,
-              style:
-                  FontsThemeModeApp(ThemeModeApp.of(context)).headlineMedium),
+              style: FontsThemeModeApp(ThemeModeApp.of(context)).bodyMedium),
         ],
       ),
       buttons: [

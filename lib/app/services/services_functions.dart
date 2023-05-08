@@ -38,7 +38,7 @@ class ServicesFunctions {
 
   Future<void> setPathVenda() async {
     final _store = context.read<ServiceStore>();
-    final file = await LocalPath().localEpModificacao;
+    final file = await LocalPath().localVendas;
     if (await Geolocator.checkPermission() == LocationPermission.denied ||
         await Geolocator.checkPermission() ==
             LocationPermission.deniedForever) {
@@ -77,12 +77,14 @@ class ServicesFunctions {
         "valor_unidade": _store.valorUnidade,
         "quantidade": _store.quantidade,
         "forma_pagamento": _store.tipoPagamentoValue,
-        "cliente": controlladorCliente.text,
+        "nome": controlladorCliente.text,
         "rua": placemark.street,
         "cidade": placemark.locality,
         "bairro": placemark.subLocality,
-        "data_dia": DateTime.now().toString()
+        "estado": placemark.administrativeArea,
+        "data_dia": DateTime.now().day.toString()
       };
+
       listaLocal.add(_json);
       await file.writeAsString(jsonEncode(listaLocal));
       print(
@@ -101,12 +103,14 @@ class ServicesFunctions {
         "valor_unidade": _store.valorUnidade,
         "quantidade": _store.quantidade,
         "forma_pagamento": _store.tipoPagamentoValue,
-        "cliente": controlladorCliente.text,
+        "nome": controlladorCliente.text,
         "rua": placemark.street,
         "cidade": placemark.locality,
         "bairro": placemark.subLocality,
-        "data_dia": DateTime.now().toString()
+        "estado": placemark.administrativeArea,
+        "data_dia": DateTime.now().day.toString()
       };
+
       print("jsonMontado? $_json  ");
       await file.writeAsString(jsonEncode(_json));
       print(
@@ -123,8 +127,13 @@ class LocalPath {
     return dir.path;
   }
 
-  Future<File> get localEpModificacao async {
+  Future<File> get localVendas async {
     final path = await _localPath;
-    return File('$path/modificacao.txt');
+    return File('$path/vendas.txt');
+  }
+
+  Future<File> get localCliente async {
+    final path = await _localPath;
+    return File('$path/clients.txt');
   }
 }

@@ -41,6 +41,22 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
     });
   }
 
+  late final _$valorVendasHojeAtom =
+      Atom(name: '_ServiceStoreBase.valorVendasHoje', context: context);
+
+  @override
+  double get valorVendasHoje {
+    _$valorVendasHojeAtom.reportRead();
+    return super.valorVendasHoje;
+  }
+
+  @override
+  set valorVendasHoje(double value) {
+    _$valorVendasHojeAtom.reportWrite(value, super.valorVendasHoje, () {
+      super.valorVendasHoje = value;
+    });
+  }
+
   late final _$valorUnidadeAtom =
       Atom(name: '_ServiceStoreBase.valorUnidade', context: context);
 
@@ -87,6 +103,15 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
     _$loadingAtom.reportWrite(value, super.loading, () {
       super.loading = value;
     });
+  }
+
+  late final _$setListCountDiarioAsyncAction =
+      AsyncAction('_ServiceStoreBase.setListCountDiario', context: context);
+
+  @override
+  Future<void> setListCountDiario(dynamic _value) {
+    return _$setListCountDiarioAsyncAction
+        .run(() => super.setListCountDiario(_value));
   }
 
   late final _$_ServiceStoreBaseActionController =
@@ -148,21 +173,11 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
   }
 
   @override
-  void setListCountDiario(dynamic _value) {
-    final _$actionInfo = _$_ServiceStoreBaseActionController.startAction(
-        name: '_ServiceStoreBase.setListCountDiario');
-    try {
-      return super.setListCountDiario(_value);
-    } finally {
-      _$_ServiceStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 tipoPagamentoValue: ${tipoPagamentoValue},
 valorTotal: ${valorTotal},
+valorVendasHoje: ${valorVendasHoje},
 valorUnidade: ${valorUnidade},
 quantidade: ${quantidade},
 loading: ${loading}

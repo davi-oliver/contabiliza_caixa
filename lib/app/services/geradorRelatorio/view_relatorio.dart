@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ga_proj/app/services/relatorio_vendas_detalhes/relatorio_vendas_page.dart';
 import 'package:ga_proj/app/services/service_contabiliza_caixa.dart';
@@ -66,22 +68,45 @@ class _ViewRelatorioState extends State<ViewRelatorio>
   late ServiceStore serviceStore;
 
   Future _getLocal() async {
-    final local = await LocalPath().localEpModificacao;
+    final local = await LocalPath().localVendas;
+    await serviceStore.setPercentHours();
+    final localClientes = await LocalPath().localCliente;
     if (await local.exists()) {
-      print("Arquivo existe");
+      print("Arquivo existe ${jsonDecode(await local.readAsString())}");
 
       serviceStore.setListCountDiario(jsonDecode(await local.readAsString()));
     } else {
       print("Arquivo não existe");
     }
+
+    log("message: ${serviceStore.valorVendasHoje}");
+    // if (await localClientes.exists()) {
+    //   print(
+    //       "Arquivo existe : ${jsonDecode(await localClientes.readAsString())}");
+
+    //   serviceStore
+    //       .setClienteFromLocal(jsonDecode(await localClientes.readAsString()));
+    // } else {
+    //   print("Arquivo não existe");
+    // }
+
+    // print("Arquivo existe");
+    // log("clientes: ${serviceStore.listaClientes.length}");
+    log("contabiliza caixa: ${serviceStore.listaCountDiario.length}");
     return local;
+  }
+
+  @override
+  void initState() {
+    _getLocal();
+    super.initState();
   }
 
   @override
   void didChangeDependencies() {
     // declare provider
     serviceStore = Provider.of<ServiceStore>(context, listen: false);
-    // _getLocal();
+
     super.didChangeDependencies();
   }
 
@@ -296,107 +321,115 @@ class _ViewRelatorioState extends State<ViewRelatorio>
             ),
 
             // make a circularProgressIndicator horizontal
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              decoration: BoxDecoration(
-                color: ThemeModeApp.of(context).primary600,
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    ThemeModeApp.of(context).primary,
-                    ThemeModeApp.of(context).tertiary,
-                    ThemeModeApp.of(context).primary600,
-                  ],
+            Observer(builder: (_) {
+              return Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: ThemeModeApp.of(context).primary600,
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      ThemeModeApp.of(context).primary,
+                      ThemeModeApp.of(context).tertiary,
+                      ThemeModeApp.of(context).primary600,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        AutoSizeText(
-                          'Vendas de Hoje',
-                          style: FontsThemeModeApp(theme).buttonStyle,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        AutoSizeText(
-                          'R\$ 0,00',
-                          style: FontsThemeModeApp(theme).buttonStyle,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.all(5.0),
-                          child: LinearPercentIndicator(
-                            percent: 0.93,
-                            lineHeight: 20.0,
-                            barRadius: Radius.circular(19.0),
-                            animation: true,
-                            progressColor: ThemeModeApp.of(context).primary,
-                            backgroundColor: ThemeModeApp.of(context).accent3,
-                            leading: Text(
-                              '93%',
-                              style: FontsThemeModeApp(theme)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Outfit',
-                                    color: ThemeModeApp.of(context).accent3,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.normal,
-                                    useGoogleFonts: GoogleFonts.asMap()
-                                        .containsKey(FontsThemeModeApp(theme)
-                                            .bodyMediumFamily),
-                                  ),
-                            ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          AutoSizeText(
+                            'Vendas de Hoje',
+                            style: FontsThemeModeApp(theme).buttonStyle,
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          AutoSizeText(
+                            'R\$ ${serviceStore.valorVendasHoje == null ? "0,00" : serviceStore.valorVendasHoje.toStringAsFixed(2)}',
+                            style: FontsThemeModeApp(theme).buttonStyle,
+                          ),
+                        ],
+                      ),
+                      Observer(builder: (_) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 20),
-                                decoration: BoxDecoration(
-                                  color: ThemeModeApp.of(context).accent4,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => CtbCaixa()));
-                                  },
-                                  child: Text(
-                                    'Cadastrar Venda',
-                                    style: FontsThemeModeApp(theme).bodySmall,
-                                  ),
+                              padding: EdgeInsetsDirectional.all(5.0),
+                              child: LinearPercentIndicator(
+                                percent: serviceStore.percentage / 100,
+                                lineHeight: 20.0,
+                                barRadius: Radius.circular(19.0),
+                                animation: true,
+                                progressColor: ThemeModeApp.of(context).primary,
+                                backgroundColor:
+                                    ThemeModeApp.of(context).accent3,
+                                leading: Text(
+                                  '${serviceStore.percentage.toStringAsFixed(2)}%',
+                                  style: FontsThemeModeApp(theme)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Outfit',
+                                        color: ThemeModeApp.of(context).accent3,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.normal,
+                                        useGoogleFonts: GoogleFonts.asMap()
+                                            .containsKey(
+                                                FontsThemeModeApp(theme)
+                                                    .bodyMediumFamily),
+                                      ),
                                 ),
                               ),
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 20),
+                                    decoration: BoxDecoration(
+                                      color: ThemeModeApp.of(context).accent4,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) => CtbCaixa()));
+                                      },
+                                      child: Text(
+                                        'Cadastrar Venda',
+                                        style:
+                                            FontsThemeModeApp(theme).bodySmall,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
-                        ),
-                      ],
-                    ),
-                  ],
+                        );
+                      }),
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -423,134 +456,90 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                   )
                 ],
               ),
-              child: ListView.builder(
-                  itemCount: 5,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, int index) {
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              5.0, 20.0, 0.0, 2.0),
-                          child: Container(
-                            width: double.infinity,
-                            child: Padding(
+              child: serviceStore.listaCountDiario.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: Text(
+                        "Você ainda não possui clientes cadastrados",
+                        style: FontsThemeModeApp(theme).bodyMedium,
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: serviceStore.listaCountDiario.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, int index) {
+                        var item = serviceStore.listaCountDiario[index];
+                        return Column(
+                          children: [
+                            Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
-                                  12.0, 2.0, 12.0, 12.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    flex: 5,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 12.0, 0.0),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            child: Image.network(
-                                              'https://images.unsplash.com/photo-1611691543545-f19c70f74a29?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDQ0fHRvd0paRnNrcEdnfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-                                              width: 40.0,
-                                              height: 40.0,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        Column(
+                                  5.0, 20.0, 0.0, 2.0),
+                              child: Container(
+                                width: double.infinity,
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      12.0, 2.0, 12.0, 12.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        flex: 5,
+                                        child: Row(
                                           mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
                                           children: [
-                                            AutoSizeText(
-                                              'Custom Name',
-                                              style: FontsThemeModeApp(theme)
-                                                  .titleMedium,
-                                            ),
-                                            if (responsiveVisibility(
-                                              context: context,
-                                              tabletLandscape: false,
-                                              desktop: false,
-                                            ))
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 2.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'Rua A, 123, Bairro, Cidade, Estado',
-                                                  style:
-                                                      FontsThemeModeApp(theme)
-                                                          .labelSmall,
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      0.0, 0.0, 12.0, 0.0),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                                child: Image.network(
+                                                  'https://images.unsplash.com/photo-1611691543545-f19c70f74a29?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDQ0fHRvd0paRnNrcEdnfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
+                                                  width: 40.0,
+                                                  height: 40.0,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
+                                            ),
+                                            Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                AutoSizeText(
+                                                  '${item.cliente}',
+                                                  style:
+                                                      FontsThemeModeApp(theme)
+                                                          .titleMedium,
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: theme.primary,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  if (responsiveVisibility(
-                                    context: context,
-                                    phone: false,
-                                    tablet: false,
-                                  ))
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        'user@domainname.com',
-                                        style:
-                                            FontsThemeModeApp(theme).bodyMedium,
-                                      ),
-                                    ),
-                                  if (responsiveVisibility(
-                                    context: context,
-                                    phone: false,
-                                  ))
-                                    Expanded(
-                                      child: Text(
-                                        dateTimeFormat(
-                                            'MEd', getCurrentTimestamp),
-                                        style:
-                                            FontsThemeModeApp(theme).bodyMedium,
-                                      ),
-                                    ),
-                                  if (responsiveVisibility(
-                                    context: context,
-                                    phone: false,
-                                    tablet: false,
-                                  ))
-                                    Expanded(
-                                      child: Text(
-                                        dateTimeFormat(
-                                            'relative', getCurrentTimestamp),
-                                        style:
-                                            FontsThemeModeApp(theme).bodyMedium,
-                                      ),
-                                    ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: theme.primary,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
+                          ],
+                        );
+                      }),
             ),
             // ListTile(
             //   leading: Text(

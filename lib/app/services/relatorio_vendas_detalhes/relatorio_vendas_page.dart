@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
+import 'package:provider/provider.dart';
 
 import '../../../global/globals_functions.dart';
 
@@ -20,6 +25,7 @@ class _RelatorioVendasPageDetalhesState
   @override
   Widget build(BuildContext context) {
     final theme = ThemeModeApp.of(context);
+    final service = Provider.of<ServiceStore>(context, listen: true);
     return Scaffold(
         body: Container(
       height: MediaQuery.of(context).size.height,
@@ -51,7 +57,8 @@ class _RelatorioVendasPageDetalhesState
               padding: const EdgeInsets.fromLTRB(0, 50, 0, 20),
               child: Container(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * .6,
+                  maxHeight: MediaQuery.of(context).size.height * .7,
+                  minHeight: MediaQuery.of(context).size.height * .7,
                   maxWidth: MediaQuery.of(context).size.width * .9,
                 ),
                 decoration: BoxDecoration(
@@ -79,7 +86,7 @@ class _RelatorioVendasPageDetalhesState
                         height: MediaQuery.of(context).size.height * .4,
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: 10,
+                          itemCount: service.listaCountDiario.length,
                           physics: AlwaysScrollableScrollPhysics(),
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
@@ -115,42 +122,41 @@ class _RelatorioVendasPageDetalhesState
                                                 ),
                                               ),
                                             ),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                AutoSizeText(
-                                                  'Custom Name',
-                                                  style:
-                                                      FontsThemeModeApp(theme)
-                                                          .titleMedium,
-                                                ),
-                                                if (responsiveVisibility(
-                                                  context: context,
-                                                  tabletLandscape: false,
-                                                  desktop: false,
-                                                ))
+                                            Observer(builder: (_) {
+                                              return Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${service.listaCountDiario[index].cliente}',
+                                                    style:
+                                                        FontsThemeModeApp(theme)
+                                                            .headlineSmall,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsetsDirectional
                                                                 .fromSTEB(
                                                             0.0, 2.0, 0.0, 0.0),
                                                     child: Text(
-                                                      'Data da venda: 12/12/2021',
+                                                      'Quantidade: ${service.listaCountDiario[index].quantidade}\n Pagamento: ${service.listaCountDiario[index].formaPagamento}',
                                                       style: FontsThemeModeApp(
                                                               theme)
                                                           .labelSmall,
                                                     ),
                                                   ),
-                                              ],
-                                            ),
+                                                ],
+                                              );
+                                            }),
                                           ],
                                         ),
                                       ),
                                       Expanded(
                                         child: Text(
-                                          'R\$ 100,00',
+                                          'R\$ ${service.listaCountDiario[index].valorUnidade}',
                                           style: FontsThemeModeApp(theme)
                                               .bodyMedium,
                                         ),
@@ -206,7 +212,7 @@ class _RelatorioVendasPageDetalhesState
                                     style: FontsThemeModeApp(theme).titleLarge,
                                   ),
                                   Text(
-                                    "R\$ 100,00",
+                                    "R\$ ${service.valorVendasHoje}",
                                     style: FontsThemeModeApp(theme).titleLarge,
                                   ),
                                 ],
@@ -227,7 +233,8 @@ class _RelatorioVendasPageDetalhesState
               padding: const EdgeInsets.fromLTRB(0, 50, 0, 20),
               child: Container(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * .6,
+                  maxHeight: MediaQuery.of(context).size.height * .7,
+                  minHeight: MediaQuery.of(context).size.height * .7,
                   maxWidth: MediaQuery.of(context).size.width * .9,
                 ),
                 decoration: BoxDecoration(
