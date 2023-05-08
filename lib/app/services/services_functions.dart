@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
+import 'package:ga_proj/global/globals_alert.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -12,9 +15,36 @@ var valorTotal = "0,00";
 class ServicesFunctions {
   BuildContext context;
   ServicesFunctions(this.context);
+
+  Future _getCurrentLocalization() async {
+    LocationPermission _permission = await Geolocator.checkPermission();
+    if (_permission == LocationPermission.denied ||
+        _permission == LocationPermission.deniedForever) {
+      await GlobalsAlert(context).alertErroGeo(
+          "Atenção\n Permissão de Localização Negada\n",
+          "Permissão de Localização Negada. Abra a guia de configurações do aplicativo e habilite a permissão de localização.");
+
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy
+                .high /*,
+            forceAndroidLocationManager: true*/
+            )
+        .catchError((err) => print(err));
+    return position;
+  }
+
   Future<void> setPathVenda() async {
     final _store = context.read<ServiceStore>();
     final file = await LocalPath().localEpModificacao;
+    if (await Geolocator.checkPermission() == LocationPermission.denied ||
+        await Geolocator.checkPermission() ==
+            LocationPermission.deniedForever) {
+      await Geolocator.openAppSettings();
+    }
+
     // await file.delete();
     if (await file.exists()) {
       print("Arquivo existe");
@@ -36,31 +66,53 @@ class ServicesFunctions {
         listaLocal.add(_aux);
       }
 
-      final _json = {
+      Position? _position = await _getCurrentLocalization();
+      var lat, long;
+      lat = _position?.latitude;
+      long = _position?.longitude;
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+      Placemark placemark = placemarks[0];
+      var _json = {
         "valor_total": _store.valorTotal,
         "valor_unidade": _store.valorUnidade,
         "quantidade": _store.quantidade,
         "forma_pagamento": _store.tipoPagamentoValue,
         "cliente": controlladorCliente.text,
+        "rua": placemark.street,
+        "cidade": placemark.locality,
+        "bairro": placemark.subLocality,
         "data_dia": DateTime.now().toString()
       };
       listaLocal.add(_json);
       await file.writeAsString(jsonEncode(listaLocal));
       print(
           "Dados salvos no arquivo: ${jsonDecode(await file.readAsString())}");
+      return await GlobalsAlert(context)
+          .alertSucesso("Pronto", "Venda salva com sucesso");
     } else {
-      final _json = {
+      Position? _position = await _getCurrentLocalization();
+      var lat, long;
+      lat = _position?.latitude;
+      long = _position?.longitude;
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+      Placemark placemark = placemarks[0];
+      var _json = {
         "valor_total": _store.valorTotal,
         "valor_unidade": _store.valorUnidade,
         "quantidade": _store.quantidade,
         "forma_pagamento": _store.tipoPagamentoValue,
         "cliente": controlladorCliente.text,
+        "rua": placemark.street,
+        "cidade": placemark.locality,
+        "bairro": placemark.subLocality,
         "data_dia": DateTime.now().toString()
       };
       print("jsonMontado? $_json  ");
       await file.writeAsString(jsonEncode(_json));
       print(
           "Dados salvos no arquivo: ${jsonDecode(await file.readAsString())}");
+      return await GlobalsAlert(context)
+          .alertSucesso("Pronto", "Venda salva com sucesso");
     }
   }
 }

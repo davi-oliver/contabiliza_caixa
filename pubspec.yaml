@@ -83,6 +83,10 @@ dependencies:
   timeago: ^3.3.0
   intl: ^0.17.0
   flutter_animate: ^4.1.1+1
+  geolocator: ^9.0.2
+  geocoding: ^2.1.0
+  emoji_alert: ^1.1.0
+  geocoder: ^0.2.1
    
 
  

@@ -88,61 +88,63 @@ class _CtbCaixaState extends State<CtbCaixa> with TickerProviderStateMixin {
                   ),
                 ),
               )
-            : Container(
-                width: size.width,
-                height: size.height,
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: size.height * 0.05),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ViewRelatorio()));
-                            },
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              color: theme.primaryText,
-                            ),
-                          ),
-                          Text(
-                            'Contabiliza Caixa',
-                            style: FontsThemeModeApp(theme).headlineSmall,
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (currentTheme is LightModeTheme) {
-                                    currentTheme = DarkModeTheme();
-                                  } else {
-                                    currentTheme = LightModeTheme();
-                                  }
-                                });
+            : Observer(builder: (_) {
+                return Container(
+                  width: size.width,
+                  height: size.height,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: size.height * 0.05),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ViewRelatorio()));
                               },
-                              icon: Icon(
-                                currentTheme is LightModeTheme
-                                    ? FontAwesomeIcons.sun
-                                    : FontAwesomeIcons.moon,
-                                color: ThemeModeApp.of(context).tertiary,
-                              )),
-                        ],
-                      ),
-                      serviceContabilizaCaixaStore.loading
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ContabilizaCaixaWidgets(context).widgetPrincipal()
-                    ],
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                color: theme.primaryText,
+                              ),
+                            ),
+                            Text(
+                              'Contabiliza Caixa',
+                              style: FontsThemeModeApp(theme).headlineSmall,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (currentTheme is LightModeTheme) {
+                                      currentTheme = DarkModeTheme();
+                                    } else {
+                                      currentTheme = LightModeTheme();
+                                    }
+                                  });
+                                },
+                                icon: Icon(
+                                  currentTheme is LightModeTheme
+                                      ? FontAwesomeIcons.sun
+                                      : FontAwesomeIcons.moon,
+                                  color: ThemeModeApp.of(context).tertiary,
+                                )),
+                          ],
+                        ),
+                        serviceContabilizaCaixaStore.loading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : ContabilizaCaixaWidgets(context).widgetPrincipal()
+                      ],
+                    ),
                   ),
-                ),
-              ));
+                );
+              }));
   }
 }
 

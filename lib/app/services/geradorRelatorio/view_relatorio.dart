@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ga_proj/app/services/relatorio_vendas_detalhes/relatorio_vendas_page.dart';
 import 'package:ga_proj/app/services/service_contabiliza_caixa.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
@@ -132,6 +133,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
               padding: EdgeInsetsDirectional.fromSTEB(4.0, 4.0, 8.0, 4.0),
               child: Container(
                 constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height * .5,
                   maxHeight: MediaQuery.of(context).size.height * .5,
                   maxWidth: MediaQuery.of(context).size.width * .9,
                 ),
@@ -149,7 +151,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                 alignment: AlignmentDirectional(0.0, -1.0),
                 child: Padding(
                   padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 4.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -165,6 +167,30 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                         child: Text(
                           'Uma visão geral das vendas mensais',
                           style: FontsThemeModeApp(theme).bodySmall,
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        RelatorioVendasPageDetalhes(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'Ver mais',
+                                style: FontsThemeModeApp(theme).bodySmall,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Expanded(

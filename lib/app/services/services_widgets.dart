@@ -1,4 +1,6 @@
 import 'package:components_ui/components_ui.dart';
+import 'package:emoji_alert/arrays.dart';
+import 'package:emoji_alert/emoji_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -215,30 +217,35 @@ class ContabilizaCaixaWidgets {
     final serviceContabilizaCaixaStore =
         Provider.of<ServiceStore>(context, listen: false);
     final theme = ThemeModeApp.of(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Observer(builder: (_) {
-            return KitButton(
-              decorationButton: BoxDecoration(
-                  color: theme.tertiary,
-                  borderRadius: BorderRadius.circular(10)),
-              height: MediaQuery.of(context).size.height * .07,
-              width: MediaQuery.of(context).size.width * .5,
-              widgetCenter: Text(
-                'Salvar',
-                style: FontsThemeModeApp(theme).buttonStyle,
-              ),
-              onTap: () async {
-                await ServicesFunctions(context).setPathVenda();
-              },
-            );
-          }),
-        ],
-      ),
-    );
+    return Observer(builder: (_) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Observer(builder: (_) {
+              return KitButton(
+                decorationButton: BoxDecoration(
+                    color: theme.tertiary,
+                    borderRadius: BorderRadius.circular(10)),
+                height: MediaQuery.of(context).size.height * .07,
+                width: MediaQuery.of(context).size.width * .5,
+                widgetCenter: Text(
+                  'Salvar',
+                  style: FontsThemeModeApp(theme).buttonStyle,
+                ),
+                onTap: () async {
+                  serviceContabilizaCaixaStore.setLoading(true);
+                  await ServicesFunctions(context).setPathVenda();
+                  serviceContabilizaCaixaStore.setLoading(false);
+                  // ignore: use_build_context_synchronously
+                },
+              );
+            }),
+          ],
+        ),
+      );
+    });
   }
 }
 
