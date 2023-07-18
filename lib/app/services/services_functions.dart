@@ -20,6 +20,7 @@ class ServicesFunctions {
     LocationPermission _permission = await Geolocator.checkPermission();
     if (_permission == LocationPermission.denied ||
         _permission == LocationPermission.deniedForever) {
+      context.read<ServiceStore>().setLoading(false);
       await GlobalsAlert(context).alertErroGeo(
           "Atenção\n Permissão de Localização Negada\n",
           "Permissão de Localização Negada. Abra a guia de configurações do aplicativo e habilite a permissão de localização.");
@@ -39,11 +40,6 @@ class ServicesFunctions {
   Future<void> setPathVenda() async {
     final _store = context.read<ServiceStore>();
     final file = await LocalPath().localVendas;
-    if (await Geolocator.checkPermission() == LocationPermission.denied ||
-        await Geolocator.checkPermission() ==
-            LocationPermission.deniedForever) {
-      await Geolocator.openAppSettings();
-    }
 
     // await file.delete();
     if (await file.exists()) {

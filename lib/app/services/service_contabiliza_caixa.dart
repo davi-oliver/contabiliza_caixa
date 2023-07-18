@@ -46,7 +46,7 @@ class _CtbCaixaState extends State<CtbCaixa> with TickerProviderStateMixin {
         Provider.of<ServiceStore>(context, listen: false);
     serviceContabilizaCaixaStoreT =
         Provider.of<ServiceStore>(context, listen: true);
-
+    serviceContabilizaCaixaStore.setLoading(false);
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }

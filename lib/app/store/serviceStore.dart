@@ -89,17 +89,23 @@ abstract class _ServiceStoreBase with Store {
     listaCountDiario.clear();
     for (var i = 0; i < _value.length; i++) {
       if (_value == 0) {
-        listaCountDiario.add(Relatorio.fromMap(_value));
-      } else {
+        if (_value[i]["data_dia"] == DateTime.now().day.toString()) {
+          print("diasss: ${_value["data_dia"]}");
+          listaCountDiario.add(Relatorio.fromMap(_value));
+          var valor =
+              _value["valor_total"].replaceAll(".", "").replaceAll(",", ".");
+          print("Valorrr::::: $valor");
+          valorVendasHoje = valorVendasHoje + double.parse(valor.toString());
+        }
+      } else if (_value[i]["data_dia"] == DateTime.now().day.toString()) {
+        print("diasss: ${_value[i]["data_dia"]}");
         listaCountDiario.add(Relatorio.fromMap(_value[i]));
-      }
-      print("diasss: ${_value[i]["data_dia"]}");
-      if (_value[i]["data_dia"] == DateTime.now().day.toString()) {
         var valor =
             _value[i]["valor_total"].replaceAll(".", "").replaceAll(",", ".");
         print("Valorrr::::: $valor");
         valorVendasHoje = valorVendasHoje + double.parse(valor.toString());
       }
+
       //
     }
     print("listaCountDiario: ${listaCountDiario.length}");
