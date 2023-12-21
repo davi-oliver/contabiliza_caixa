@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ga_proj/app/services/geradorRelatorio/view_relatorio.dart';
+import 'package:ga_proj/app/services/home/home_page.dart';
+import 'package:ga_proj/app/services/services_functions.dart';
 import 'package:ga_proj/app/services/services_widgets.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:provider/provider.dart'; 
@@ -12,26 +13,29 @@ import 'package:ga_proj/app/store/serviceStore.dart';
 
 import '../../global/theme/theme_mode.dart';
 
-class CtbCaixa extends StatefulWidget {
-  const CtbCaixa({super.key});
+class ContabilizaCaixaPage extends StatefulWidget {
+  const ContabilizaCaixaPage({super.key});
 
   @override
-  State<CtbCaixa> createState() => _CtbCaixaState();
+  State<ContabilizaCaixaPage> createState() => _ContabilizaCaixaPageState();
 }
 
-class _CtbCaixaState extends State<CtbCaixa> with TickerProviderStateMixin {
+class _ContabilizaCaixaPageState extends State<ContabilizaCaixaPage> with TickerProviderStateMixin {
   late ServiceStore serviceContabilizaCaixaStore;
   late ServiceStore serviceContabilizaCaixaStoreT;
   bool _carregando = true;
   // late AnimationController _controllerAnimation;
 
-  @override
-  void initState() {
-    Future.delayed(Duration(seconds: 5));
-
-    setState(() {
+  Future init () async {
+      await ServicesFunctions(context).initPage();
+      setState(() {
       _carregando = false;
     });
+  }
+  @override
+  void initState() {
+    init();
+    Future.delayed(Duration(seconds: 5));
     super.initState();
   }
 

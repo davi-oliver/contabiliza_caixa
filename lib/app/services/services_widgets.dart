@@ -1,23 +1,30 @@
- // ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 
- import 'package:flutter/material.dart'; 
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ga_proj/app/services/service_contabiliza_caixa.dart';
+import 'package:ga_proj/app/services/contabiliza_caixa_page.dart';
+import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/services/services_functions.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
+import 'package:ga_proj/backend/datasource/results.dart';
 import 'package:ga_proj/components/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
+import 'package:ga_proj/global/globals_routes.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
- 
+import 'package:ga_proj/models/item.dart';
+import 'package:ga_proj/models/product.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
- 
 
 class ContabilizaCaixaWidgets {
   BuildContext context;
   ContabilizaCaixaWidgets(this.context);
-  Widget widgetPrincipal() { 
+  Widget widgetPrincipal() {
     return Container(
       margin: const EdgeInsets.only(top: 50),
       child: Column(
@@ -35,6 +42,7 @@ class ContabilizaCaixaWidgets {
     final serviceContabilizaCaixaStoreT =
         Provider.of<ServiceStore>(context, listen: true);
     final theme = ThemeModeApp.of(context);
+    final store = Provider.of<SaleStore>(context, listen: true);
     return Container(
       width: size.width * .9,
       decoration: BoxDecoration(
@@ -113,6 +121,65 @@ class ContabilizaCaixaWidgets {
                   campo: 'Quantidade',
                   controllador: controlladorQtd,
                 ),
+                // dropdown products
+                StatefulBuilder(builder: (context, StateSetter setState) {
+                  return Observer(builder: (_) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        height: MediaQuery.of(context).size.height * .071,
+                        padding: const EdgeInsets.all(10),
+                        child: DropdownButton<Product?>(
+                          hint: Text(
+                            "Selecione o produto",
+                            style: ThemeModeApp.of(context)
+                                .headlineSmall
+                                .copyWith(
+                                  color: ThemeModeApp.of(context).primaryText,
+                                ),
+                          ),
+                          value: store.itemSelectedProduct,
+                          isExpanded: true,
+                          iconSize: 30,
+                          underline: Container(
+                            color: Colors.transparent,
+                          ),
+                          alignment: Alignment.centerLeft,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          items: store.listItensProduct.map((Product item) {
+                            return DropdownMenuItem<Product?>(
+                              value: item,
+                              child: Text(item.name),
+                            );
+                          }).toList(),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          onChanged: (Product? value) {
+                            if (value != null) {
+                              setState(() {
+                                Product item = value;
+                                controllerPreco
+                                    .updateValue(item.price.toDouble());
+                                store.setItemSelectedProduct(item);
+                                serviceContabilizaCaixaStore.setValorUnidade();
+                                serviceContabilizaCaixaStore.setValorTotal();
+                                log("item ${value.name}");
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    );
+                  });
+                }),
                 TextFieldCampo(
                   titulo: 'Preço',
                   onChanged: (p0) {
@@ -147,34 +214,59 @@ class ContabilizaCaixaWidgets {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .02,
                 ),
-                Observer(builder: (_) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    child: DropdownButton(
-                      value: serviceContabilizaCaixaStoreT.tipoPagamentoValue,
-                      items: paymentOptions,
-                      hint: Text('Selecione a forma de pagamento',
-                          // style of the dropdown hint
-                          style: FontsThemeModeApp(theme).headlineSmall),
-                      // style of the dropdown items
-                      style: FontsThemeModeApp(theme).titleMedium,
-                      // style of the dropdown button
-                      dropdownColor: theme.secondaryBackground,
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        color: theme.accent1,
+
+                StatefulBuilder(builder: (context, StateSetter setState) {
+                  return Observer(builder: (_) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        height: MediaQuery.of(context).size.height * .071,
+                        padding: const EdgeInsets.all(10),
+                        child: DropdownButton<ItemType?>(
+                          hint: Text(
+                            "Selecione o tipo de pagamento",
+                            style: ThemeModeApp.of(context)
+                                .headlineSmall
+                                .copyWith(
+                                  color: ThemeModeApp.of(context).primaryText,
+                                ),
+                          ),
+                          value: store.itemSelectedPayment,
+                          isExpanded: true,
+                          iconSize: 30,
+                          underline: Container(
+                            color: Colors.transparent,
+                          ),
+                          alignment: Alignment.centerLeft,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          items: store.listItensPayment.map((ItemType? item) {
+                            return DropdownMenuItem<ItemType>(
+                              value: item!,
+                              child: Text(item.name),
+                            );
+                          }).toList(),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          onChanged: (ItemType? value) {
+                            if (value != null) {
+                              setState(() {
+                                store.setItemSelectedPayment(value);
+                                log("item ${value.name}");
+                              });
+                            }
+                          },
+                        ),
                       ),
-                      // center text in the dropdown button
-
-                      iconSize: 36,
-                      isExpanded: true,
-
-                      onChanged: (value) {
-                        serviceContabilizaCaixaStoreT.setTipoPagamento(value!);
-                        print(context.read<ServiceStore>().tipoPagamentoValue);
-                      },
-                    ),
-                  );
+                    );
+                  });
                 }),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .02,
@@ -213,6 +305,7 @@ class ContabilizaCaixaWidgets {
   Widget botaoSalvar() {
     final serviceContabilizaCaixaStore =
         Provider.of<ServiceStore>(context, listen: false);
+    final store = Provider.of<SaleStore>(context, listen: false);
     final theme = ThemeModeApp.of(context);
     return Observer(builder: (_) {
       return Container(
@@ -221,10 +314,88 @@ class ContabilizaCaixaWidgets {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Observer(builder: (_) {
-              return  FFButtonWidget(
+              return FFButtonWidget(
                 onPressed: () async {
+                  // validate controllers
+                  // return scaffold mensage
+                  if (controlladorQtd.text.isEmpty) {
+                    return ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Adicione a quantidade"),
+                        backgroundColor: theme.error,
+                      ),
+                    );
+                  }
+
+                  if (controllerPreco.text.isEmpty) {
+                    return ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Adicione o preço"),
+                        backgroundColor: theme.error,
+                      ),
+                    );
+                  }
+
+                  if (controlladorCliente.text.isEmpty) {
+                    return ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Adicione o nome do cliente"),
+                        backgroundColor: theme.error,
+                      ),
+                    );
+                  }
+
+                  if (serviceContabilizaCaixaStore.valorTotal == "0,00") {
+                    return ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Adicione o valor total"),
+                        backgroundColor: theme.error,
+                      ),
+                    );
+                  }
+
+                  if (store.itemSelectedPayment == null) {
+                    return ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Selecione o tipo de pagamento"),
+                        backgroundColor: theme.error,
+                      ),
+                    );
+                  }
                   serviceContabilizaCaixaStore.setLoading(true);
-                  await ServicesFunctions(context).setPathVenda();
+                  Results result = await ServicesFunctions(context)
+                      .createSale(
+                          quantidade: controlladorQtd.text,
+                          valorTotal:
+                              serviceContabilizaCaixaStore.valorTotal,
+                          valorUnidade:
+                              serviceContabilizaCaixaStore.valorUnidade,
+                          cliente: controlladorCliente.text,
+                          productId: store.itemSelectedProduct.id,
+                          pagamentoId: store.itemSelectedPayment!.id);
+                  if (result.sucess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Venda adicionada com sucesso"),
+                        backgroundColor: theme.success,
+                      ),
+                    );
+                    controlladorQtd.text = "";
+                    controllerPreco.updateValue(0);
+                    controlladorCliente.text = "";
+                    serviceContabilizaCaixaStore.setValorTotal();
+                    serviceContabilizaCaixaStore.setValorUnidade();
+
+                    context.pushNamed(homePage);
+                  }
+                  else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Erro ao adicionar venda"),
+                        backgroundColor: theme.error,
+                      ),
+                    );
+                  }
                   serviceContabilizaCaixaStore.setLoading(false);
                   // ignore: use_build_context_synchronously
                 },
@@ -241,8 +412,6 @@ class ContabilizaCaixaWidgets {
                   borderRadius: BorderRadius.circular(5),
                 ),
               );
-              
-               
             }),
           ],
         ),

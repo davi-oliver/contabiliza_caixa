@@ -1,11 +1,19 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ga_proj/app/local/local_storage.dart';
+import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
+import 'package:ga_proj/backend/datasource/results.dart';
+import 'package:ga_proj/backend/db/api/get/get.supabase.service.dart';
 import 'package:ga_proj/global/globals_alert.dart';
+import 'package:ga_proj/models/item.dart';
+import 'package:ga_proj/models/product.dart';
+import 'package:ga_proj/models/sale.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,6 +24,186 @@ var valorTotal = "0,00";
 class ServicesFunctions {
   BuildContext context;
   ServicesFunctions(this.context);
+
+  Future initPage() async {
+    final store = Provider.of<SaleStore>(context, listen: false);
+    final local = await LocalPath().localPayment;
+    final localProduct = await LocalPath().localProduct;
+
+    store.itemSelectedPayment = null;
+    store.itemSelectedProduct = null;
+
+    if (await localProduct.exists()) {
+      store.listItensProduct.clear();
+      var data = await jsonDecode(await localProduct.readAsString());
+      for (var element in data) {
+        Product item = Product.fromJson(element);
+        store.addListItensProduct(item);
+      }
+      log(name: "GET PRODUCT local", data.toString());
+      log(name: "Store Product", store.listItensProduct.length.toString());
+    } else if (!localProduct.existsSync()) {
+      store.listItensProduct.clear();
+      var rep = await GetSupaBaseApi().findProductAll();
+
+      if (rep is List<Map<String, dynamic>>) {
+        for (var element in rep) {
+          Product item = Product.fromJson(element);
+          store.addListItensProduct(item);
+        }
+        await localProduct.writeAsString(jsonEncode(rep));
+        // log local
+        log(name: "GET PRODUCT local", await localProduct.readAsString());
+      } else {
+        log(
+            name: "GET PRODUCT",
+            "Erro ao buscar dados ${rep.runtimeType.toString()}");
+      }
+      log(name: "Store Product", store.listItensProduct.length.toString());
+    }
+
+    if (local.existsSync()) {
+      store.listItensPayment.clear();
+      var data = await jsonDecode(await local.readAsString());
+      for (var element in data) {
+        ItemType item = ItemType.fromJson(element);
+        store.addListItensPayment(item);
+      }
+      log(name: "GET PAYMENT local", data.toString());
+      log(name: "Store Payment", store.listItensPayment.length.toString());
+    } else if (!local.existsSync()) {
+      store.listItensPayment.clear();
+      var rep = await GetSupaBaseApi().findAllPayment();
+
+      if (rep is List<Map<String, dynamic>>) {
+        for (var element in rep) {
+          ItemType item = ItemType.fromJson(element);
+          store.addListItensPayment(item);
+        }
+        await local.writeAsString(jsonEncode(rep));
+        // log local
+        log(name: "GET PAYMENT local", await local.readAsString());
+      } else {
+        log(
+            name: "GET PAYMENT",
+            "Erro ao buscar dados ${rep.runtimeType.toString()}");
+      }
+      log(name: "Store Payment", store.listItensPayment.length.toString());
+      return;
+    }
+  }
+
+  Future findAllSaleDay () async {
+
+    final store = Provider.of<SaleStore>(context, listen: false);
+    // remove hour in date 
+    var data = DateTime.now().toString().split(" ")[0];
+    var mounth = DateTime.now().toString().split(" ")[0];
+    mounth =  mounth.split("-")[1];
+
+
+    log(name: "Mounth", mounth);
+    var rep = await GetSupaBaseApi().findSaleByDate(data);
+    var repMounth = await GetSupaBaseApi().findSaleByMounth(mounth);
+    store.listSaleDay.clear();
+    store.listSaleMounth.clear();
+
+    if (rep is List<Map<String, dynamic>>) {
+      for (var element in rep) {
+        SaleModel item = SaleModel.fromJson(element);
+        store.addListSaleDay(item);
+      }
+      // log local
+      log(name: "GET SALE listSale lenght",  store.listSaleDay.length.toString());
+    } else {
+      log(
+          name: "GET SALE",
+          "Erro ao buscar dados ${rep.runtimeType.toString()}");
+    }
+
+  
+
+    if (repMounth != null ) {
+      for (var element in repMounth) {
+        SaleModel item = SaleModel.fromJson(element);
+        store.addListSaleMounth(item);
+      }
+      // log local
+      log(name: "GET SALE listSale lenght",  store.listSaleMounth.length.toString());
+    } else {
+      log(
+          name: "GET SALE",
+          "Erro ao buscar dados ${repMounth.runtimeType.toString()}");
+    }
+    
+
+
+  }
+
+  Future createSale({
+    String valorTotal = "0,00",
+    String valorUnidade = "0,00",
+    String quantidade = "0",
+    int productId = 0,
+    int pagamentoId = 0,
+    String cliente = "0",
+  }) async {
+    // parse to double valorTotal
+    valorTotal = valorTotal.replaceAll(".", "").replaceAll(",", ".");
+    valorUnidade = valorUnidade.replaceAll(".", "").replaceAll(",", ".");
+    // parse to double valor total
+    var total = double.parse(valorTotal);
+    var price = double.parse(valorUnidade);
+
+    // parse int quantidade
+    quantidade = quantidade.replaceAll(".", "").replaceAll(",", ".");
+    var qtd = int.parse(quantidade);
+
+
+    // validade if cliente exist
+    final resp = await GetSupaBaseApi().findByNameClient({"name": cliente});
+
+    // if client not exist create client
+    if (resp.length == 0) {
+      final resp2 = await GetSupaBaseApi().createClient({"name": cliente});
+      if (resp2 is List<Map<String, dynamic>>) {
+        log(name: "CREATE CLIENT", "Cliente criado com sucesso");
+      } else {
+        log(name: "CREATE CLIENT", "Erro ao criar cliente");
+      }
+    }
+
+    // get id client[
+    final resp3 = await GetSupaBaseApi().findByNameClient({"name": cliente});
+    int idClient = resp3[0]["id"];
+    // get geolocation
+    Position? _position = await _getCurrentLocalization();
+    var lat, long;
+    lat = _position?.latitude;
+    long = _position?.longitude;
+
+    // create sale
+    final resp4 = await GetSupaBaseApi().createSale({
+      "total": total,
+      "price": price,
+      "quantity": qtd,
+      "payment_type": pagamentoId,
+      "cliente": idClient,
+      "user_id": 1,
+      "product_id": productId,
+      "geo": "$lat,$long"
+    });
+
+    log(name: "CREATE SALE", resp4.toString());
+
+    if (resp4 == null) {
+      log(name: "CREATE SALE", "Venda criada com sucesso");
+      return Results(sucess: true);
+    } else {
+      log(name: "CREATE SALE", "Erro ao criar venda");
+      return Results(sucess: false, message: "Erro ao criar venda");
+    }
+  }
 
   Future _getCurrentLocalization() async {
     LocationPermission _permission = await Geolocator.checkPermission();
@@ -30,11 +218,11 @@ class ServicesFunctions {
     }
 
     Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy
-                .high /*,
+        desiredAccuracy: LocationAccuracy
+            .high /*,
             forceAndroidLocationManager: true*/
-            );
-        
+        );
+
     return position;
   }
 
@@ -43,7 +231,7 @@ class ServicesFunctions {
     final file = await LocalPath().localVendas;
 
     // await file.delete();
-    if (await file.exists()) { 
+    if (await file.exists()) {
       print("Arquivo existe");
       print(await file.readAsString());
       List listaLocal = [];
@@ -115,22 +303,5 @@ class ServicesFunctions {
       return await GlobalsAlert(context)
           .alertSucesso("Pronto", "Venda salva com sucesso");
     }
-  }
-}
-
-class LocalPath {
-  Future<String> get _localPath async {
-    final dir = await getApplicationDocumentsDirectory();
-    return dir.path;
-  }
-
-  Future<File> get localVendas async {
-    final path = await _localPath;
-    return File('$path/vendas.txt');
-  }
-
-  Future<File> get localCliente async {
-    final path = await _localPath;
-    return File('$path/clients.txt');
   }
 }

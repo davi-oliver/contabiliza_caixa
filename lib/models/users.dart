@@ -2,7 +2,7 @@ class Users {
   int? id;
   String? name;
   String? email;
-  int? phone;
+  String? phone;
   String? createdAt;
 
   Users({this.id, this.name, this.email, this.phone, this.createdAt});

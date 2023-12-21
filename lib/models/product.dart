@@ -1,29 +1,35 @@
-
 class Product {
-  int? id;
-  String? name;
-  int? price;
-  int? amount;
-  String? createdAt;
+  final int id;
+  final String createdAt;
+  final String name;
+  final dynamic price;
+  final dynamic amount;
 
-  Product({this.id, this.name, this.price, this.amount, this.createdAt});
+  Product({
+    required this.id,
+    required this.createdAt,
+    required this.name,
+    required this.price,
+    required this.amount,
+  });
 
-  Product.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    price = json['price'];
-    amount = json['amount'];
-    createdAt = json['created_at'];
+  factory Product.fromJson( json) {
+    return Product(
+      id: json['id'],
+      createdAt: json['created_at'] ?? "",
+      name: json['name'],
+      price: json['price'],
+      amount: json['amount'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['price'] = this.price;
-    data['amount'] = this.amount;
-    data['created_at'] = this.createdAt;
-    return data;
+    return {
+      'id': id,
+      'created_at': createdAt,
+      'name': name,
+      'price': price,
+      'amount': amount,
+    };
   }
 }
-

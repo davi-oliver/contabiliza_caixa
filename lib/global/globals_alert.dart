@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emoji_alert/emoji_alert.dart';
-import 'package:ga_proj/app/services/geradorRelatorio/view_relatorio.dart';
+import 'package:ga_proj/app/services/home/home_page.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
  

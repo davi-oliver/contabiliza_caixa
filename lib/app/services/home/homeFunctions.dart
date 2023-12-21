@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
-class RelatorioFunctions {
+class HomeFunctions {
   BuildContext context;
-  RelatorioFunctions(this.context);
+  HomeFunctions(this.context);
 
   Future getLocalClientes() async {}
 

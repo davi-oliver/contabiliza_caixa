@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/store/serviceStore.dart'; 
 import 'package:ga_proj/components/flutter_flow/internationalization.dart';
 import 'package:ga_proj/components/flutter_flow/nav/nav.dart';
@@ -16,6 +17,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       Provider<ServiceStore>(create: (_) => ServiceStore()),
+      Provider<SaleStore>(create: (_) => SaleStore()),
     ],
     child: MyApp(),
   ));

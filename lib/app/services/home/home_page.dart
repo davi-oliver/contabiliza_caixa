@@ -1,23 +1,28 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:auto_size_text/auto_size_text.dart'; 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart'; 
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ga_proj/app/local/local_storage.dart';
 import 'package:ga_proj/app/services/relatorio_vendas_detalhes/relatorio_vendas_page.dart';
-import 'package:ga_proj/app/services/service_contabiliza_caixa.dart';
+import 'package:ga_proj/app/services/contabiliza_caixa_page.dart';
+import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/backend/db.supabase.dart';
 import 'package:ga_proj/backend/db/api/get/get.supabase.service.dart';
 import 'package:ga_proj/components/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/themeligth.dart';
+import 'package:ga_proj/models/client_info.dart';
+import 'package:ga_proj/models/sale.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobx/mobx.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
 import '../../../global/theme/theme_mode.dart';
 import '../../../global/theme/themedark.dart';
 import '../services_functions.dart';
@@ -64,39 +69,28 @@ class ViewRelatorio extends StatefulWidget {
 class _ViewRelatorioState extends State<ViewRelatorio>
     with SingleTickerProviderStateMixin {
   late ServiceStore serviceStore;
+  late SaleStore store;
 
-  Future _getLocal() async {
-    final local = await LocalPath().localVendas;
-    await serviceStore.setPercentHours();
-    // final localClientes = await LocalPath().localCliente;
-    if (await local.exists()) {
-      print("Arquivo existe ${jsonDecode(await local.readAsString())}");
-
-      serviceStore.setListCountDiario(jsonDecode(await local.readAsString()));
-    } else {
-      print("Arquivo não existe");
+  Future _getClients() async {
+    final rep = await GetSupaBaseApi().findAllClient();
+    if (rep != []) {
+      for (var element in rep) {
+        ClientInfo client = ClientInfo.fromJson(element);
+        serviceStore.addListClientes(client);
+      }
     }
 
-    log("message: ${serviceStore.valorVendasHoje}");
-    // if (await localClientes.exists()) {
-    //   print(
-    //       "Arquivo existe : ${jsonDecode(await localClientes.readAsString())}");
+    // busca todas as vendas do dia
 
-    //   serviceStore
-    //       .setClienteFromLocal(jsonDecode(await localClientes.readAsString()));
-    // } else {
-    //   print("Arquivo não existe");
-    // }
-
-    // print("Arquivo existe");
-    // log("clientes: ${serviceStore.listaClientes.length}");
-    log("contabiliza caixa: ${serviceStore.listaCountDiario.length}");
-    return local;
+    await ServicesFunctions(context).findAllSaleDay();
+    setState(() {});
+    // set total day from sales
   }
 
+  var totalDay;
   @override
   void initState() {
-    _getLocal();
+    _getClients();
     super.initState();
   }
 
@@ -104,7 +98,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
   void didChangeDependencies() {
     // declare provider
     serviceStore = Provider.of<ServiceStore>(context, listen: false);
-
+    store = Provider.of<SaleStore>(context, listen: false);
     super.didChangeDependencies();
   }
 
@@ -130,40 +124,21 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                     color: Colors.transparent,
                   ),
                   Text(
-                    'Relatorios',
+                    'Relatórios',
                     style: FontsThemeModeApp(theme).titleLarge,
                   ),
                   IconButton(
                       onPressed: () {
-                        setState(() {
-                       
-                        });
+                        setState(() {});
                       },
                       icon: Icon(
-                         FontAwesomeIcons.moon,
+                        FontAwesomeIcons.moon,
                         color: ThemeModeApp.of(context).tertiary,
                       )),
                 ],
               ),
             ),
-            FFButtonWidget(
-                onPressed: () async {
-                 await GetSupaBaseApi().findProductAll();
-                  // ignore: use_build_context_synchronously
-                },
-                text: 'Salvar',
-                options: FFButtonOptions(
-                  width: 130,
-                  height: 40,
-                  color: theme.tertiary,
-                  textStyle: FontsThemeModeApp(theme).buttonStyle,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 0,
-                  ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
+
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(4.0, 4.0, 8.0, 4.0),
               child: Container(
@@ -251,23 +226,11 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                                         progressColor:
                                             ThemeModeApp.of(context).alternate,
                                         backgroundColor:
-                                            ThemeModeApp.of(context).lineColor,
+                                            ThemeModeApp.of(context).primary,
                                         center: Text(
                                           '23%',
-                                          style: FontsThemeModeApp(theme)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Outfit',
-                                                color: ThemeModeApp.of(context)
-                                                    .alternate,
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.normal,
-                                                useGoogleFonts: GoogleFonts
-                                                        .asMap()
-                                                    .containsKey(
-                                                        FontsThemeModeApp(theme)
-                                                            .bodyMediumFamily),
-                                              ),
+                                          style: ThemeModeApp.of(context)
+                                              .labelLarge,
                                         ),
                                       ),
                                     ),
@@ -296,20 +259,8 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                                             ThemeModeApp.of(context).lineColor,
                                         center: Text(
                                           '93%',
-                                          style: FontsThemeModeApp(theme)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Outfit',
-                                                color: ThemeModeApp.of(context)
-                                                    .tertiary,
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.normal,
-                                                useGoogleFonts: GoogleFonts
-                                                        .asMap()
-                                                    .containsKey(
-                                                        FontsThemeModeApp(theme)
-                                                            .bodyMediumFamily),
-                                              ),
+                                          style: ThemeModeApp.of(context)
+                                              .labelLarge,
                                         ),
                                       ),
                                     ),
@@ -366,7 +317,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            'R\$ ${serviceStore.valorVendasHoje == null ? "0,00" : serviceStore.valorVendasHoje.toStringAsFixed(2)}',
+                            'R\$ ${store.listSaleDay.isEmpty ? "0,00" : store.listSaleDay.map((e) => e.total).reduce((value, element) => value + element).toStringAsFixed(2)}',
                             style: FontsThemeModeApp(theme).buttonStyle,
                           ),
                         ],
@@ -420,7 +371,8 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (_) => CtbCaixa()));
+                                                builder: (_) =>
+                                                    ContabilizaCaixaPage()));
                                       },
                                       child: Text(
                                         'Cadastrar Venda',
@@ -466,7 +418,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                   )
                 ],
               ),
-              child: serviceStore.listaCountDiario.isEmpty
+              child: serviceStore.listaClientes.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.all(40.0),
                       child: Text(
@@ -475,11 +427,11 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                       ),
                     )
                   : ListView.builder(
-                      itemCount: serviceStore.listaCountDiario.length,
+                      itemCount: serviceStore.listaClientes.length,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, int index) {
-                        var item = serviceStore.listaCountDiario[index];
+                        var item = serviceStore.listaClientes[index];
                         return Column(
                           children: [
                             Padding(
@@ -519,7 +471,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 AutoSizeText(
-                                                  '${item.cliente}',
+                                                  '${item.name}',
                                                   style:
                                                       FontsThemeModeApp(theme)
                                                           .titleMedium,

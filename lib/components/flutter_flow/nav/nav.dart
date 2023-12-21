@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ga_proj/app/services/geradorRelatorio/view_relatorio.dart';
+import 'package:ga_proj/app/services/home/home_page.dart';
 import 'package:ga_proj/components/flutter_flow/flutter_flow_util.dart';
 import 'package:ga_proj/components/flutter_flow/nav/serialization_util.dart';
 import 'package:ga_proj/global/globals_routes.dart';

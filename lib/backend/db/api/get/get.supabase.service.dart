@@ -1,11 +1,13 @@
 import 'dart:developer';
 
 import 'package:ga_proj/backend/db.supabase.dart';
+import 'package:ga_proj/backend/db/api/client/client.dart';
+import 'package:ga_proj/backend/db/api/payment/payment.dart';
 import 'package:ga_proj/backend/db/api/product/product.controller.dart';
 import 'package:ga_proj/backend/db/api/sale/sale.controller.dart';
 import 'package:ga_proj/backend/db/api/users/users.controller.dart';
 
-class GetSupaBaseApi implements SSale, SProduct, SUsers {
+class GetSupaBaseApi implements SSale, SProduct, SUsers, SPayment, SCliente {
   @override
   Future findSaleAll() async {
     // select all sale show all data from sale, product and user
@@ -53,11 +55,51 @@ class GetSupaBaseApi implements SSale, SProduct, SUsers {
 
   // get sale by date
   Future findSaleByDate(String date) async {
+    log(name: "GET SALE BY DATE", date.toString());
+    
+  
+
     final resp = await supabase
         .from('sale')
         .select('*,product(*),users(*)')
         .eq('created_at', date);
     log(name: "GET SALE BY DATE", resp.toString());
+    if (resp == null) {
+      return [];
+    } else {
+      return resp;
+    }
+  }
+
+  Future findSaleByMounth (mount) async {
+      if(mount != ""){
+      // select * created_at 
+      final resp = 
+      await supabase.from('sale').select('*,product(*),users(*)');
+      log(name: "GET SALE BY DATE", resp.toString());
+      List<Map<String, dynamic>> list = [];
+       list.addAll(resp);
+       List<Map<String, dynamic>> response = [];
+
+       // if created_at split - [1] == mount
+        list.forEach((element) {
+        if(element['created_at'] != null){
+            if(element["created_at"].split("-")[1] == mount){
+            log(name: "FilterBy", "${element["created_at"].split("-")[1]}");
+            response.add(element);
+          }
+        }
+        });
+
+        log(name: "Response", response.toString());
+
+
+       if(response == null){
+         return []; 
+        }else {
+          return response;
+        }
+    }
   }
 
   @override
@@ -86,6 +128,13 @@ class GetSupaBaseApi implements SSale, SProduct, SUsers {
 
   @override
   Future createSale(Map<String, dynamic> data) async {
+    // created_at contains year day month 
+    var createdAt = DateTime.now().toString();
+    // remove time from created_at
+    createdAt = createdAt.substring(0, 10);
+    log(name: "CREATE At", createdAt.toString());
+
+
     // create sale : user_id, product_id, quantity, price, total, created_at, updated_at, payment_type
     final resp = await supabase.from('sale').insert([
       {
@@ -95,13 +144,16 @@ class GetSupaBaseApi implements SSale, SProduct, SUsers {
         'price': data['price'],
         'total': data['total'],
         'payment_type': data['payment_type'],
+        'created_at': createdAt,
       },
     ]);
-    log(name: "CREATE SALE", resp.toString());
+    log(name: "CREATE SALE API", resp.toString());
+    return resp;
+
   }
 
   @override
-  Future createUsers(Map<String, dynamic> data)async {
+  Future createUsers(Map<String, dynamic> data) async {
     // create user : name, phone, email
     final resp = await supabase.from('users').insert([
       {
@@ -137,8 +189,10 @@ class GetSupaBaseApi implements SSale, SProduct, SUsers {
   @override
   Future findProductAll() async {
     // select all product show all data from product
-    final resp = await supabase.from('product').select().order('id', ascending: true);
+    final resp =
+        await supabase.from('product').select().order('id', ascending: true);
     log(name: "GET PRODUCT", resp.toString());
+    return resp;
   }
 
   @override
@@ -186,7 +240,8 @@ class GetSupaBaseApi implements SSale, SProduct, SUsers {
 
   @override
   Future findUsersAll() async {
-    final resp = await supabase.from('users').select().order('id', ascending: true);
+    final resp =
+        await supabase.from('users').select().order('id', ascending: true);
     log(name: "GET USERS", resp.toString());
   }
 
@@ -205,14 +260,12 @@ class GetSupaBaseApi implements SSale, SProduct, SUsers {
 
   @override
   Future findUsersByEmail(String email) async {
- 
     final resp = await supabase.from('users').select().eq('email', email);
     log(name: "GET USERS BY EMAIL", resp.toString());
   }
 
   @override
   Future findUsersById(int id) async {
- 
     final resp = await supabase.from('users').select().eq('id', id);
     log(name: "GET USERS BY ID", resp.toString());
   }
@@ -278,6 +331,84 @@ class GetSupaBaseApi implements SSale, SProduct, SUsers {
 
     log(name: "UPDATE USERS", resp2.toString());
   }
-  
- 
+
+  @override
+  Future findAllPayment() async {
+    // select all payment
+
+    final resp =
+        await supabase.from('payment').select().order('id', ascending: true);
+    log(name: "GET PAYMENT", resp.toString());
+    log(name: "runtimetype", resp.runtimeType.toString());
+    return resp;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> createClient(Map<String, dynamic> data)async {
+    
+    final resp = await supabase.from('client').insert([
+      {
+        'name': data['name'],
+      },
+    ]);
+    log(name: "CREATE CLIENT", resp.toString());
+    // if null return empty list map string dynamic
+    if (resp == null) {
+      return [];
+    }else {
+      return resp;
+    }
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> deleteClient(Map<String, dynamic> data)async {
+    final resp = await supabase.from('client').delete().eq('id', data['id']);
+    log(name: "DELETE CLIENT", resp.toString());
+    return resp;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> findAllClient( ) async{
+    final resp = await supabase.from('client').select().order('id', ascending: true);
+    log(name: "GET CLIENT", resp.toString());
+    return resp;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> findByNameClient(
+      Map<String, dynamic> data)async {
+    
+    final resp = await supabase.from('client').select().eq('name', data['name']);
+    log(name: "GET CLIENT BY NAME", resp.toString());
+    // if null return empty list map string dynamic
+    if (resp == null) {
+      return [];
+    }else {
+      return resp;
+    }
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> findOneClient(Map<String, dynamic> data)async {
+    
+    final resp = await supabase.from('client').select().eq('id', data['id']);
+    log(name: "GET CLIENT BY ID", resp.toString());
+    return resp;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> updateClient(
+      Map<String, dynamic> data) async {
+    final resp = await supabase.from('client').update({
+      'name': data['name'],
+      'phone': data['phone'],
+      'email': data['email'],
+    }).eq('id', data['id']);
+
+    // select users by id show all data from users
+    final resp2 = await supabase.from('client').select().eq('id', data['id']);
+
+    log(name: "UPDATE USERS", resp2.toString());
+    return resp2;
+  }
 }
