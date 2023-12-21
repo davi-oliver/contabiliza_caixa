@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
-
-import '../err/errors.dart';
+import 'package:ga_proj/backend/err/errors.dart';
 
 abstract class IHttpInterfacePostPut {
   Future<Either<HttpRequestFailure, dynamic>> makeJsonRequest(

@@ -1,13 +1,14 @@
-import 'dart:developer';
+// import 'dart:developer';
+
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart'; 
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
+ 
 import 'package:provider/provider.dart';
 
 import '../../../global/globals_functions.dart';
@@ -82,7 +83,7 @@ class _RelatorioVendasPageDetalhesState
                           style: FontsThemeModeApp(theme).titleLarge),
                       // listar as vendas do dia => valor, cliente e data
 
-                      Container(
+                      SizedBox(
                         height: MediaQuery.of(context).size.height * .4,
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -93,7 +94,7 @@ class _RelatorioVendasPageDetalhesState
                             return Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   5.0, 20.0, 0.0, 2.0),
-                              child: Container(
+                              child: SizedBox(
                                 width: double.infinity,
                                 child: Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(

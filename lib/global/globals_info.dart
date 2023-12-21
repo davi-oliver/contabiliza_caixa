@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
-class GlobalsInformations {
-  String url = "https://kombat-api.herokuapp.com";
-}
+ 
+  String urlProd = "https://kombat-api.herokuapp.com";
+ 

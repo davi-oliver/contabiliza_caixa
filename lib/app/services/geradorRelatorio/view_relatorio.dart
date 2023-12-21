@@ -1,25 +1,23 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:auto_size_text/auto_size_text.dart'; 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter/src/widgets/framework.dart'; 
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ga_proj/app/services/relatorio_vendas_detalhes/relatorio_vendas_page.dart';
 import 'package:ga_proj/app/services/service_contabiliza_caixa.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
+import 'package:ga_proj/backend/db.supabase.dart';
+import 'package:ga_proj/backend/db/api/get/get.supabase.service.dart';
+import 'package:ga_proj/components/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/themeligth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-import '../../../global/globals_animations.dart';
-import '../../../global/globals_functions.dart';
+import 'package:provider/provider.dart'; 
 import '../../../global/theme/theme_mode.dart';
 import '../../../global/theme/themedark.dart';
 import '../services_functions.dart';
@@ -32,7 +30,7 @@ class MyWidget extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyWidget> with TickerProviderStateMixin {
-  late TabController _tabController;
+  late TabController tabController;
   late ScrollController _scrollController;
   bool get _isAppBarExpanded {
     return _scrollController.hasClients &&
@@ -46,7 +44,7 @@ class _MyWidgetState extends State<MyWidget> with TickerProviderStateMixin {
         if (_isAppBarExpanded == true) {
         } else {}
       });
-    _tabController = new TabController(length: 3, vsync: this);
+    tabController = new TabController(length: 3, vsync: this);
     super.initState();
   }
 
@@ -70,7 +68,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
   Future _getLocal() async {
     final local = await LocalPath().localVendas;
     await serviceStore.setPercentHours();
-    final localClientes = await LocalPath().localCliente;
+    // final localClientes = await LocalPath().localCliente;
     if (await local.exists()) {
       print("Arquivo existe ${jsonDecode(await local.readAsString())}");
 
@@ -138,22 +136,34 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                   IconButton(
                       onPressed: () {
                         setState(() {
-                          if (currentTheme is LightModeTheme) {
-                            currentTheme = DarkModeTheme();
-                          } else {
-                            currentTheme = LightModeTheme();
-                          }
+                       
                         });
                       },
                       icon: Icon(
-                        currentTheme is LightModeTheme
-                            ? FontAwesomeIcons.sun
-                            : FontAwesomeIcons.moon,
+                         FontAwesomeIcons.moon,
                         color: ThemeModeApp.of(context).tertiary,
                       )),
                 ],
               ),
             ),
+            FFButtonWidget(
+                onPressed: () async {
+                 await GetSupaBaseApi().findProductAll();
+                  // ignore: use_build_context_synchronously
+                },
+                text: 'Salvar',
+                options: FFButtonOptions(
+                  width: 130,
+                  height: 40,
+                  color: theme.tertiary,
+                  textStyle: FontsThemeModeApp(theme).buttonStyle,
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(4.0, 4.0, 8.0, 4.0),
               child: Container(
@@ -326,14 +336,14 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                 margin:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 decoration: BoxDecoration(
-                  color: ThemeModeApp.of(context).primary600,
+                  color: ThemeModeApp.of(context).primary,
                   gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                     colors: [
-                      ThemeModeApp.of(context).primary,
-                      ThemeModeApp.of(context).tertiary,
-                      ThemeModeApp.of(context).primary600,
+                      ThemeModeApp.of(context).info,
+                      ThemeModeApp.of(context).info.withOpacity(0.9),
+                      ThemeModeApp.of(context).info.withOpacity(0.6),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(16),
@@ -369,15 +379,15 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                             Padding(
                               padding: EdgeInsetsDirectional.all(5.0),
                               child: LinearPercentIndicator(
-                                percent: serviceStore.percentage / 100,
+                                percent: 0.9,
                                 lineHeight: 20.0,
                                 barRadius: Radius.circular(19.0),
                                 animation: true,
-                                progressColor: ThemeModeApp.of(context).primary,
+                                progressColor: ThemeModeApp.of(context).info,
                                 backgroundColor:
-                                    ThemeModeApp.of(context).accent3,
+                                    ThemeModeApp.of(context).primaryBackground,
                                 leading: Text(
-                                  '${serviceStore.percentage.toStringAsFixed(2)}%',
+                                  '${90}%',
                                   style: FontsThemeModeApp(theme)
                                       .bodyMedium
                                       .override(

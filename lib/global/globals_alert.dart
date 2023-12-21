@@ -3,6 +3,7 @@ import 'package:emoji_alert/emoji_alert.dart';
 import 'package:ga_proj/app/services/geradorRelatorio/view_relatorio.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
+ 
 import 'package:geolocator/geolocator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -25,7 +26,7 @@ class GlobalsAlert {
           color: Colors.grey,
         ),
       ),
-      titleStyle: FontsThemeModeApp(ThemeModeApp.of(context)).titleMedium,
+      titleStyle: ThemeModeApp.of(context).titleSmall,
       overlayColor: const Color(0x55000000),
     );
     Alert(
@@ -40,13 +41,13 @@ class GlobalsAlert {
         children: [
           Text(texto,
               style:
-                  FontsThemeModeApp(ThemeModeApp.of(context)).headlineMedium),
+                 ThemeModeApp.of(context).headlineMedium),
         ],
       ),
       buttons: [
         DialogButton(
           child: Text("ENTENDI",
-              style: FontsThemeModeApp(ThemeModeApp.of(context)).bodyMedium),
+              style: ThemeModeApp.of(context).bodyMedium),
           onPressed: () async {
             Navigator.of(context, rootNavigator: true).pop();
             await Geolocator.openAppSettings();

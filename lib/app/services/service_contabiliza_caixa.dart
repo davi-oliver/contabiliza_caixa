@@ -1,5 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:components_ui/components_ui.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
+ 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -7,15 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ga_proj/app/services/geradorRelatorio/view_relatorio.dart';
 import 'package:ga_proj/app/services/services_widgets.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
-import 'package:ga_proj/global/theme/themeligth.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
-import 'package:ga_proj/app/services/services_functions.dart';
+import 'package:provider/provider.dart'; 
 import 'package:ga_proj/app/store/serviceStore.dart';
 
 import '../../global/theme/theme_mode.dart';
-import '../../global/theme/themedark.dart';
 
 class CtbCaixa extends StatefulWidget {
   const CtbCaixa({super.key});
@@ -28,7 +23,7 @@ class _CtbCaixaState extends State<CtbCaixa> with TickerProviderStateMixin {
   late ServiceStore serviceContabilizaCaixaStore;
   late ServiceStore serviceContabilizaCaixaStoreT;
   bool _carregando = true;
-  late AnimationController _controllerAnimation;
+  // late AnimationController _controllerAnimation;
 
   @override
   void initState() {
@@ -120,17 +115,11 @@ class _CtbCaixaState extends State<CtbCaixa> with TickerProviderStateMixin {
                             IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    if (currentTheme is LightModeTheme) {
-                                      currentTheme = DarkModeTheme();
-                                    } else {
-                                      currentTheme = LightModeTheme();
-                                    }
+                                     
                                   });
                                 },
                                 icon: Icon(
-                                  currentTheme is LightModeTheme
-                                      ? FontAwesomeIcons.sun
-                                      : FontAwesomeIcons.moon,
+                                  FontAwesomeIcons.moon,
                                   color: ThemeModeApp.of(context).tertiary,
                                 )),
                           ],
@@ -196,7 +185,7 @@ class TextFieldCampo extends StatefulWidget {
 class _TextFieldCampoState extends State<TextFieldCampo> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     final serviceContabilizaCaixaStore =
         Provider.of<ServiceStore>(context, listen: false);
     return Container(

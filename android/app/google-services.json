@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "299658163408",
+    "project_id": "accounts-cash",
+    "storage_bucket": "accounts-cash.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299658163408:android:2d764bf47610ede0d61ad5",
+        "android_client_info": {
+          "package_name": "com.example.ga_proj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQobOLpsVB1s1KcjRin1w1wCnl9702A9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,8 +1,9 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/global/globals_alert.dart';
 import 'package:geocoding/geocoding.dart';
@@ -32,8 +33,8 @@ class ServicesFunctions {
             desiredAccuracy: LocationAccuracy
                 .high /*,
             forceAndroidLocationManager: true*/
-            )
-        .catchError((err) => print(err));
+            );
+        
     return position;
   }
 
@@ -42,7 +43,7 @@ class ServicesFunctions {
     final file = await LocalPath().localVendas;
 
     // await file.delete();
-    if (await file.exists()) {
+    if (await file.exists()) { 
       print("Arquivo existe");
       print(await file.readAsString());
       List listaLocal = [];

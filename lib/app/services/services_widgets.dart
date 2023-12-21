@@ -1,26 +1,23 @@
-import 'package:components_ui/components_ui.dart';
-import 'package:emoji_alert/arrays.dart';
-import 'package:emoji_alert/emoji_alert.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
+ // ignore_for_file: must_be_immutable
+
+ import 'package:flutter/material.dart'; 
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ga_proj/app/services/service_contabiliza_caixa.dart';
 import 'package:ga_proj/app/services/services_functions.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
+import 'package:ga_proj/components/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
+ 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import '../../global/theme/themedark.dart';
-import '../../global/theme/themeligth.dart';
+ 
 
 class ContabilizaCaixaWidgets {
   BuildContext context;
   ContabilizaCaixaWidgets(this.context);
-  Widget widgetPrincipal() {
-    final size = MediaQuery.of(context).size;
+  Widget widgetPrincipal() { 
     return Container(
       margin: const EdgeInsets.only(top: 50),
       child: Column(
@@ -224,23 +221,28 @@ class ContabilizaCaixaWidgets {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Observer(builder: (_) {
-              return KitButton(
-                decorationButton: BoxDecoration(
-                    color: theme.tertiary,
-                    borderRadius: BorderRadius.circular(10)),
-                height: MediaQuery.of(context).size.height * .07,
-                width: MediaQuery.of(context).size.width * .5,
-                widgetCenter: Text(
-                  'Salvar',
-                  style: FontsThemeModeApp(theme).buttonStyle,
-                ),
-                onTap: () async {
+              return  FFButtonWidget(
+                onPressed: () async {
                   serviceContabilizaCaixaStore.setLoading(true);
                   await ServicesFunctions(context).setPathVenda();
                   serviceContabilizaCaixaStore.setLoading(false);
                   // ignore: use_build_context_synchronously
                 },
+                text: 'Salvar',
+                options: FFButtonOptions(
+                  width: 130,
+                  height: 40,
+                  color: theme.tertiary,
+                  textStyle: FontsThemeModeApp(theme).buttonStyle,
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
               );
+              
+               
             }),
           ],
         ),
@@ -275,7 +277,7 @@ class TextFieldCampo extends StatefulWidget {
 class _TextFieldCampoState extends State<TextFieldCampo> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
 // TODO IMPLEMENTS CALCULA VALOR  TOTAL
     final theme = ThemeModeApp.of(context);
     return Container(
