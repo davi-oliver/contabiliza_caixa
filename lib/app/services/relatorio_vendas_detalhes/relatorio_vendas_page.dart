@@ -131,7 +131,8 @@ class _RelatorioVendasPageDetalhesState
                                 style: FontsThemeModeApp(theme).titleLarge),
                             // listar as vendas do dia => valor, cliente e data
 
-                            SizedBox(
+                        
+                           SizedBox(
                               height: MediaQuery.of(context).size.height * .4,
                               child: ListView.builder(
                                 shrinkWrap: true,
@@ -277,6 +278,7 @@ class _RelatorioVendasPageDetalhesState
                                           style: FontsThemeModeApp(theme)
                                               .titleLarge,
                                         ),
+                                        if(store.listSaleDay.isNotEmpty)
                                         Text(
                                           "R\$ ${store.listSaleDay.map((e) => e.total).reduce((value, element) => value + element)}",
                                           style: FontsThemeModeApp(theme)
