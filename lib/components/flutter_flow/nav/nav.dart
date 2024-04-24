@@ -1,17 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ga_proj/app/services/company/company_page.dart';
 import 'package:ga_proj/app/services/home/home_page.dart';
 import 'package:ga_proj/app/services/login/page/create_page.dart';
 import 'package:ga_proj/app/services/login/page/login_page.dart';
 import 'package:ga_proj/app/services/login/page/recover_page.dart';
+import 'package:ga_proj/app/services/perfil/configs/config_page.dart';
+import 'package:ga_proj/app/services/perfil/perfil_page.dart';
+import 'package:ga_proj/app/services/product/product_page.dart';
+import 'package:ga_proj/app/services/stock/stock_page.dart';
 import 'package:ga_proj/components/flutter_flow/flutter_flow_util.dart';
 import 'package:ga_proj/components/flutter_flow/nav/serialization_util.dart';
 import 'package:ga_proj/global/globals_routes.dart';
-import 'package:go_router/go_router.dart'; 
+import 'package:ga_proj/models/product.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-  
 export 'serialization_util.dart';
 
 const kTransitionInfoKey = '__transition_info__';
@@ -64,36 +69,53 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             FFRoute(
               name: homePage,
               path: homePage,
-              builder: (context, params) =>
-                  const ViewRelatorio(),
+              builder: (context, params) => const ViewRelatorio(),
             ),
             FFRoute(
               name: relatorioPage,
               path: relatorioPage,
               builder: (context, params) => const MyWidget(),
             ),
-
-              FFRoute(
+            FFRoute(
               name: loginPage,
               path: loginPage,
               builder: (context, params) => const LoginPage(),
             ),
-
-               FFRoute(
+            FFRoute(
               name: createAccountPage,
               path: createAccountPage,
               builder: (context, params) => const CreateAccountPage(),
             ),
-
-               FFRoute(
+            FFRoute(
               name: recoverPage,
               path: recoverPage,
               builder: (context, params) => const RecoverPage(),
             ),
-
-
-           
-           
+            FFRoute(
+              name: productPage,
+              path: productPage,
+              builder: (context, params) => const ProductPage(),
+            ),
+            FFRoute(
+              name: stockPage,
+              path: stockPage,
+              builder: (context, params) => const StockPage(),
+            ),
+            FFRoute(
+              name: companyPage,
+              path: companyPage,
+              builder: (context, params) => const CompanyPage(),
+            ),
+            FFRoute(
+              name: perfilPage,
+              path: perfilPage,
+              builder: (context, params) => const PerfilPage(),
+            ),
+            FFRoute(
+              name: configsPage,
+              path: configsPage,
+              builder: (context, params) => const ConfigsWidget(),
+            ),
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ),
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
@@ -248,7 +270,8 @@ class TransitionInfo {
   final Duration duration;
   final Alignment? alignment;
 
-  static TransitionInfo appDefault() => const TransitionInfo(hasTransition: false);
+  static TransitionInfo appDefault() =>
+      const TransitionInfo(hasTransition: false);
 }
 
 class RootPageContext {

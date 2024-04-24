@@ -12,6 +12,26 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 class GlobalsAlert {
   BuildContext context;
   GlobalsAlert(this.context);
+    alertError(
+      {String? text, VoidCallback? ontap, String? title, String? tituloBotao}) {
+    QuickAlert.show(
+      context: context,
+      barrierDismissible: false,
+      type: QuickAlertType.error,
+      backgroundColor: ThemeModeApp.of(context).secondaryBackground,
+      title: title ?? 'Erro',
+      titleColor: ThemeModeApp.of(context).primaryText,
+      text: text ?? 'Ops! Algo deu errado',
+      textColor: ThemeModeApp.of(context).primaryText,
+      confirmBtnText: tituloBotao ?? 'Fechar',
+      confirmBtnTextStyle:
+          TextStyle(color: ThemeModeApp.of(context).secondaryBackground),
+      confirmBtnColor: ThemeModeApp.of(context).primary,
+      borderRadius: GlobalsSizes().borderSize,
+      onConfirmBtnTap:
+          ontap ?? () => Navigator.of(context, rootNavigator: true).pop(),
+    );
+  }
   alertWarning({String? title, String? text, VoidCallback? onTap, String? btnText}) {
     QuickAlert.show(
       context: context,

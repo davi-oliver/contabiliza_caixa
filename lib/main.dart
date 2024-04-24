@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ga_proj/app/services/home/store/home_store.dart';
 import 'package:ga_proj/app/services/login/store/login_store.dart';
+import 'package:ga_proj/app/services/perfil/configs/store/config_store.dart';
+import 'package:ga_proj/app/services/perfil/store/perfil_store.dart';
 import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/store/serviceStore.dart'; 
 import 'package:ga_proj/components/flutter_flow/internationalization.dart';
@@ -24,6 +26,9 @@ void main() async {
       Provider<GlobalStore>(create: (_) => GlobalStore()),
       Provider<LoginStore>(create: (_) => LoginStore()),
       Provider<HomeStore>(create: (_) => HomeStore()),
+      Provider<ConfigStore>(create: (_) => ConfigStore()),
+      Provider<PerfilStore>(create: (_) => PerfilStore()),
+ 
     ],
     child: MyApp(),
   ));

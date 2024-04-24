@@ -5,7 +5,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ga_proj/app/fonts/typography.dart';
 import 'package:ga_proj/app/services/home/store/home_store.dart';
+import 'package:ga_proj/global/globals_routes.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class HomeWidgets {
@@ -25,6 +27,7 @@ class HomeWidgets {
               //     builder: (context) => const PerfilPage(),
               //   ),
               // );
+              context.pushNamed(perfilPage);
             },
             child: Row(
               children: [
@@ -112,6 +115,8 @@ class HomeWidgets {
                   onTap: () {
                     homeStore.setSelectedMenuItem(1);
                     log("homeStore.selectedMenuItem ${homeStore.selectedMenuItem}");
+                    context.pushNamed(homePage);
+
                   },
                 )
               : ItemCardMenu(
@@ -121,6 +126,7 @@ class HomeWidgets {
                   onTap: () {
                     homeStore.setSelectedMenuItem(1);
                     log("homeStore.selectedMenuItem ${homeStore.selectedMenuItem}");
+                    context.pushNamed(homePage);
                   },
                   index: 1),
           SizedBox(height: 10),
@@ -132,6 +138,8 @@ class HomeWidgets {
                   onTap: () {
                     homeStore.setSelectedMenuItem(2);
                     log("homeStore.selectedMenuItem ${homeStore.selectedMenuItem}");
+                    context.pushNamed(productPage);
+
                   },
                 )
               : ItemCardMenu(
@@ -141,6 +149,8 @@ class HomeWidgets {
                   onTap: () {
                     homeStore.setSelectedMenuItem(2);
                     log("homeStore.selectedMenuItem ${homeStore.selectedMenuItem}");
+                    context.pushNamed(productPage);
+
                   },
                   index: 2),
           SizedBox(height: 10),
@@ -153,6 +163,8 @@ class HomeWidgets {
                   onTap: () {
                     homeStore.setSelectedMenuItem(3);
                     log("homeStore.selectedMenuItem ${homeStore.selectedMenuItem}");
+                    context.pushNamed(companyPage);
+
                   },
                 )
               : ItemCardMenu(
@@ -162,6 +174,8 @@ class HomeWidgets {
                   onTap: () {
                     homeStore.setSelectedMenuItem(3);
                     log("homeStore.selectedMenuItem ${homeStore.selectedMenuItem}");
+                    context.pushNamed(companyPage);
+
                   },
                   index: 3),
           SizedBox(height: 10),
@@ -175,6 +189,8 @@ class HomeWidgets {
                   onTap: () {
                     homeStore.setSelectedMenuItem(4);
                     log("homeStore.selectedMenuItem ${homeStore.selectedMenuItem}");
+                    context.pushNamed(stockPage);
+
                   },
                 )
               : ItemCardMenu(
@@ -184,6 +200,8 @@ class HomeWidgets {
                   onTap: () {
                     homeStore.setSelectedMenuItem(4);
                     log("homeStore.selectedMenuItem ${homeStore.selectedMenuItem}");
+                    context.pushNamed(stockPage);
+
                   },
                   index: 3),
           SizedBox(height: 10),
@@ -212,6 +230,7 @@ class HomeWidgets {
                   title: "Meu Perfil",
                   onTap: () {
                     homeStore.setSelectedMenuItem(5);
+                    context.pushNamed(perfilPage);
                   },
                 )
               : ItemCardMenu(
@@ -220,6 +239,7 @@ class HomeWidgets {
                   title: "Meu Perfil",
                   onTap: () {
                     homeStore.setSelectedMenuItem(5);
+                    context.pushNamed(perfilPage);
                   },
                   index: 5),
         ],
