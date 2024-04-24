@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ga_proj/app/services/contabiliza_caixa_page.dart';
+import 'package:ga_proj/app/services/adicionar_produto/adicionar_produto.dart';
 import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/services/services_functions.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
@@ -180,6 +180,24 @@ class ContabilizaCaixaWidgets {
                     );
                   });
                 }),
+
+                FFButtonWidget(text: "Cadastrar Produto", onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                    return AdicionarProdutoPage();
+                  
+                  })));
+                }, options: FFButtonOptions(
+                  width: 130,
+                  height: 40,
+                  color: theme.tertiary,
+                  textStyle: FontsThemeModeApp(theme).buttonStyle,
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),),
+                
                 TextFieldCampo(
                   titulo: 'Preço',
                   onChanged: (p0) {

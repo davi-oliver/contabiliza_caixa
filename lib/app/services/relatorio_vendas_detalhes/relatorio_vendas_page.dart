@@ -132,6 +132,9 @@ class _RelatorioVendasPageDetalhesState
                             // listar as vendas do dia => valor, cliente e data
 
                         
+
+
+                        
                            SizedBox(
                               height: MediaQuery.of(context).size.height * .4,
                               child: ListView.builder(

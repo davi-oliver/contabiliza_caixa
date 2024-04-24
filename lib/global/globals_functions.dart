@@ -1,7 +1,5 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:ga_proj/global/globals_animations.dart';
+import 'package:flutter/material.dart'; 
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 

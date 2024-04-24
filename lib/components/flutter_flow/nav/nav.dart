@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ga_proj/app/services/home/home_page.dart';
+import 'package:ga_proj/app/services/login/page/create_page.dart';
+import 'package:ga_proj/app/services/login/page/login_page.dart';
+import 'package:ga_proj/app/services/login/page/recover_page.dart';
 import 'package:ga_proj/components/flutter_flow/flutter_flow_util.dart';
 import 'package:ga_proj/components/flutter_flow/nav/serialization_util.dart';
 import 'package:ga_proj/global/globals_routes.dart';
@@ -36,12 +39,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context) => Container(
                 color: Colors.black,
                 child: Image.asset(
-                  'assets/images/image-removebg-preview.png',
+                  'asset/images/image-removebg-preview.png',
                   fit: BoxFit.contain,
                 ),
               ),
             )
-          : ViewRelatorio(),
+          : const ViewRelatorio(),
       routes: [
         FFRoute(
           name: '_initialize',
@@ -51,24 +54,44 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                   builder: (context) => Container(
                     color: Colors.black,
                     child: Image.asset(
-                      'assets/images/image-removebg-preview.png',
+                      'asset/images/splash.png',
                       fit: BoxFit.contain,
                     ),
                   ),
                 )
-              : ViewRelatorio(),
+              : const LoginPage(),
           routes: [
             FFRoute(
-              name: '$homePage',
-              path: '$homePage',
+              name: homePage,
+              path: homePage,
               builder: (context, params) =>
-                  ViewRelatorio(),
+                  const ViewRelatorio(),
             ),
             FFRoute(
-              name: '$relatorioPage',
-              path: '$relatorioPage',
-              builder: (context, params) => MyWidget(),
+              name: relatorioPage,
+              path: relatorioPage,
+              builder: (context, params) => const MyWidget(),
             ),
+
+              FFRoute(
+              name: loginPage,
+              path: loginPage,
+              builder: (context, params) => const LoginPage(),
+            ),
+
+               FFRoute(
+              name: createAccountPage,
+              path: createAccountPage,
+              builder: (context, params) => const CreateAccountPage(),
+            ),
+
+               FFRoute(
+              name: recoverPage,
+              path: recoverPage,
+              builder: (context, params) => const RecoverPage(),
+            ),
+
+
            
            
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
@@ -225,7 +248,7 @@ class TransitionInfo {
   final Duration duration;
   final Alignment? alignment;
 
-  static TransitionInfo appDefault() => TransitionInfo(hasTransition: false);
+  static TransitionInfo appDefault() => const TransitionInfo(hasTransition: false);
 }
 
 class RootPageContext {

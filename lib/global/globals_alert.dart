@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:emoji_alert/emoji_alert.dart';
 import 'package:ga_proj/app/services/home/home_page.dart';
+import 'package:ga_proj/global/globals_animations.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
  
 import 'package:geolocator/geolocator.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class GlobalsAlert {
   BuildContext context;
   GlobalsAlert(this.context);
+  alertWarning({String? title, String? text, VoidCallback? onTap, String? btnText}) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.warning,
+      barrierDismissible: false,
+      backgroundColor: ThemeModeApp.of(context).secondaryBackground,
+      title: title ?? 'Alerta',
+      titleColor: ThemeModeApp.of(context).primaryText,
+      text: text ?? 'Ops! Algo não saiu como o esperado',
+      textColor: ThemeModeApp.of(context).primaryText,
+      confirmBtnText: btnText ?? 'Fechar',
+      confirmBtnTextStyle:
+          TextStyle(color: ThemeModeApp.of(context).secondaryBackground),
+      confirmBtnColor: ThemeModeApp.of(context).primary,
+      borderRadius: GlobalsSizes().borderSize,
+      onConfirmBtnTap:
+          onTap ?? () => Navigator.of(context, rootNavigator: true).pop(),
+    );
+  }
+
   alertErroGeo(
     titulo,
     texto,
