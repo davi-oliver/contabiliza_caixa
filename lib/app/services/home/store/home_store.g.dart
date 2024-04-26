@@ -25,6 +25,39 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
+  late final _$visibilityNotificationAtom =
+      Atom(name: '_HomeStoreBase.visibilityNotification', context: context);
+
+  @override
+  bool get visibilityNotification {
+    _$visibilityNotificationAtom.reportRead();
+    return super.visibilityNotification;
+  }
+
+  @override
+  set visibilityNotification(bool value) {
+    _$visibilityNotificationAtom
+        .reportWrite(value, super.visibilityNotification, () {
+      super.visibilityNotification = value;
+    });
+  }
+
+  late final _$visibilityProfileAtom =
+      Atom(name: '_HomeStoreBase.visibilityProfile', context: context);
+
+  @override
+  bool get visibilityProfile {
+    _$visibilityProfileAtom.reportRead();
+    return super.visibilityProfile;
+  }
+
+  @override
+  set visibilityProfile(bool value) {
+    _$visibilityProfileAtom.reportWrite(value, super.visibilityProfile, () {
+      super.visibilityProfile = value;
+    });
+  }
+
   late final _$_HomeStoreBaseActionController =
       ActionController(name: '_HomeStoreBase', context: context);
 
@@ -40,9 +73,33 @@ mixin _$HomeStore on _HomeStoreBase, Store {
   }
 
   @override
+  void setVisibilityNotification(bool value) {
+    final _$actionInfo = _$_HomeStoreBaseActionController.startAction(
+        name: '_HomeStoreBase.setVisibilityNotification');
+    try {
+      return super.setVisibilityNotification(value);
+    } finally {
+      _$_HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setVisibilityProfile(bool value) {
+    final _$actionInfo = _$_HomeStoreBaseActionController.startAction(
+        name: '_HomeStoreBase.setVisibilityProfile');
+    try {
+      return super.setVisibilityProfile(value);
+    } finally {
+      _$_HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-selectedMenuItem: ${selectedMenuItem}
+selectedMenuItem: ${selectedMenuItem},
+visibilityNotification: ${visibilityNotification},
+visibilityProfile: ${visibilityProfile}
     ''';
   }
 }

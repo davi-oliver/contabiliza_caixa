@@ -10,7 +10,7 @@ class LightModeTheme extends ThemeModeApp {
   late Color primaryText = const Color(0xFF0D121D);
   late Color secondaryText = const Color(0xFF57636C);
   late Color primaryBackground = const Color(0xFFFFFFFF);
-  late Color secondaryBackground = const Color(0xFFFFFFFF);
+  late Color secondaryBackground = Color.fromARGB(255, 238, 246, 249);
   late Color accent1 = const Color(0xFF4E73DF);
   late Color accent2 = const Color(0xFF1ABB9B);
   late Color accent3 = Colors.red;

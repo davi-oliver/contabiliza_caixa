@@ -9,4 +9,16 @@ abstract class _HomeStoreBase with Store {
 
   @action
   void setSelectedMenuItem(int value) => selectedMenuItem = value;
+
+  @observable
+  bool visibilityNotification = false;
+
+  @action
+  void setVisibilityNotification(bool value) => visibilityNotification = value;
+
+  @observable
+  bool visibilityProfile = false;
+
+  @action
+  void setVisibilityProfile(bool value) => visibilityProfile = value;
 }
