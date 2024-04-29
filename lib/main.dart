@@ -14,7 +14,7 @@ import 'package:ga_proj/components/flutter_flow/nav/nav.dart';
 import 'package:ga_proj/global/store/global_store.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
- 
+ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'global/theme/theme_mode.dart';
 
 void main() async {
@@ -22,6 +22,10 @@ void main() async {
   await Future.wait([
     ThemeModeApp.initialize(),
   ]);
+  await Supabase.initialize(
+    url: 'https://rtsrqjtzvwjslrjhwnpv.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0c3JxanR6dndqc2xyamh3bnB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MzYzMDMsImV4cCI6MjAyOTQxMjMwM30.bIFvyxhoVGoIinGIlXxpiP8rDr6GVkBFcKfl7o039ys',
+  );
   runApp(MultiProvider(
     providers: [
       Provider<ServiceStore>(create: (_) => ServiceStore()),

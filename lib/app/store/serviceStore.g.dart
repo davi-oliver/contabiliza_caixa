@@ -118,7 +118,7 @@ mixin _$ServiceStore on _ServiceStoreBase, Store {
       ActionController(name: '_ServiceStoreBase', context: context);
 
   @override
-  void addListClientes(ClientInfo item) {
+  void addListClientes(CompanyInfo item) {
     final _$actionInfo = _$_ServiceStoreBaseActionController.startAction(
         name: '_ServiceStoreBase.addListClientes');
     try {

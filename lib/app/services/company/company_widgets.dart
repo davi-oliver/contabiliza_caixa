@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ga_proj/app/services/company/store/companies_store.dart';
+import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/global/globals_widgets.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
 import 'package:provider/provider.dart';
@@ -72,13 +73,13 @@ class CompanyWidgets {
   }
 
   Widget tabbarWidget() {
-    final CompaniesStore companiesStore =
-        Provider.of<CompaniesStore>(context, listen: false);
+    final ServiceStore companiesStore =
+        Provider.of<ServiceStore>(context, listen: false);
     return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
         child: Container(
           width: double.infinity,
-          height: 400.0,
+          height: 600.0,
           decoration: BoxDecoration(
             color: ThemeModeApp.of(context).primaryBackground,
             boxShadow: [
@@ -113,7 +114,7 @@ class CompanyWidgets {
                     indicatorWeight: 2.0,
                     tabs: const [
                       Tab(
-                        text: 'Categoria 1',
+                        text: 'Principais Fornecedores',
                       ),
                     ],
                   ),
@@ -127,7 +128,7 @@ class CompanyWidgets {
                           : Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   16.0, 12.0, 16.0, 12.0),
-                              child: companiesStore.companies.isEmpty
+                              child: companiesStore.listCompanies.isEmpty
                                   ? Center(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -140,22 +141,25 @@ class CompanyWidgets {
                                   : ListView.builder(
                                       padding: EdgeInsets.zero,
                                       itemCount:
-                                          companiesStore.companies.length,
+                                          companiesStore.listCompanies.length,
                                       shrinkWrap: true,
                                       scrollDirection: Axis.vertical,
                                       itemBuilder: (context, index) {
                                         // log("aaaaa ${solicitacaoComuniqueStore.soliciataoComuniqueListNaoEnviado[index].dataInsercao}");
                                         return GlobalsWidgets(context)
                                             .cardsSolicitacaoEmAndamento(
-                                          data: companiesStore.companies[index]
-                                                  .dataInsercao ??
-                                              "02/02/2022",
-                                          status: "Cadastrado",
+                                          data: companiesStore.listCompanies[index]
+                                                  .company?.phone??
+                                              "",
+                                          status:companiesStore.listCompanies[index]
+                                                  .company?.email ?? " ",
                                           buttomTitle: 'Ver',
                                           subtitle:
-                                              "${companiesStore.companies[index].descricao ?? "Sem descrição"}",
+                                              "${companiesStore.listCompanies[index]
+                                                  .address?.street ?? "Sem descrição"}, ${companiesStore.listCompanies[index].address?.number ?? "Sem número"} - ${companiesStore.listCompanies[index].address?.city ?? "Sem cidade"} ",
                                           title:
-                                              "${companiesStore.companies[index].nome ?? "Sem nome"}",
+                                              companiesStore.listCompanies[index]
+                                                  .company?.name ?? "Sem nome",
                                           onTap: () {},
                                         );
                                       },

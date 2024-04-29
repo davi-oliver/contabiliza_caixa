@@ -80,7 +80,7 @@ class StockWidgets{
         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
         child: Container(
           width: double.infinity,
-          height: 400.0,
+          height: 600.0,
           decoration: BoxDecoration(
             color: ThemeModeApp.of(context).primaryBackground,
             boxShadow:   [
@@ -115,7 +115,7 @@ class StockWidgets{
                     indicatorWeight: 2.0,
                     tabs: const [
                       Tab(
-                        text: 'Categoria 1',
+                        text: 'Este mês',
                       ),
                     ],
                   ),
@@ -148,15 +148,15 @@ class StockWidgets{
                                         // log("aaaaa ${solicitacaoComuniqueStore.soliciataoComuniqueListNaoEnviado[index].dataInsercao}");
                                         return GlobalsWidgets(context)
                                             .cardsSolicitacaoEmAndamento(
-                                          data: stockStore.products[index]
-                                                  .dataInsercao ??
+                                          data: "R\$ ${stockStore.products[index]
+                                                  .stock?.purchasePrice.toString()} a unidade" ??
                                               "02/02/2022",
-                                          status: "Cadastrado",
+                                          status: "Quantidade: ${stockStore.products[index].stock?.quantityPurchased ?? 0} ",
                                           buttomTitle: 'Ver',
                                           subtitle:
-                                              "${stockStore.products[index].descricao ?? "Sem descrição"}",
+                                              "${stockStore.products[index].company?.name ?? "Sem descrição"}",
                                           title:
-                                              "${stockStore.products[index].nome ?? "Sem nome"}",
+                                              "${stockStore.products[index].product?.name ?? "Sem nome"}",
                                           onTap: () {},
                                         );
                                       },

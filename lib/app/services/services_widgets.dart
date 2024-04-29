@@ -157,7 +157,7 @@ class ContabilizaCaixaWidgets {
                           items: store.listItensProduct.map((Product item) {
                             return DropdownMenuItem<Product?>(
                               value: item,
-                              child: Text(item.name),
+                              child: Text(item.name?? ""),
                             );
                           }).toList(),
                           borderRadius:
@@ -167,7 +167,7 @@ class ContabilizaCaixaWidgets {
                               setState(() {
                                 Product item = value;
                                 controllerPreco
-                                    .updateValue(item.price.toDouble());
+                                    .updateValue(item.price!.toDouble());
                                 store.setItemSelectedProduct(item);
                                 serviceContabilizaCaixaStore.setValorUnidade();
                                 serviceContabilizaCaixaStore.setValorTotal();

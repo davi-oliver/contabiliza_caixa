@@ -29,6 +29,28 @@ mixin _$StockStore on _StockStoreBase, Store {
       ActionController(name: '_StockStoreBase', context: context);
 
   @override
+  void addStockProduct(StockInfo product) {
+    final _$actionInfo = _$_StockStoreBaseActionController.startAction(
+        name: '_StockStoreBase.addStockProduct');
+    try {
+      return super.addStockProduct(product);
+    } finally {
+      _$_StockStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic clearProducts() {
+    final _$actionInfo = _$_StockStoreBaseActionController.startAction(
+        name: '_StockStoreBase.clearProducts');
+    try {
+      return super.clearProducts();
+    } finally {
+      _$_StockStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setLoading(dynamic v) {
     final _$actionInfo = _$_StockStoreBaseActionController.startAction(
         name: '_StockStoreBase.setLoading');

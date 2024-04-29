@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -513,15 +514,15 @@ class HomeWidgets {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.0),
             color: ThemeModeApp.of(context).primaryBackground,
-            boxShadow: [
-              const BoxShadow(
+            boxShadow: const [
+              BoxShadow(
                 blurRadius: 4.0,
                 color: Color(0x33000000),
                 offset: Offset(0.0, 2.0),
               )
             ],
           ),
-          child: serviceStore.listaClientes.isEmpty
+          child: serviceStore.listCompanies.isEmpty
               ? Padding(
                   padding: const EdgeInsets.all(40.0),
                   child: Text(
@@ -530,11 +531,11 @@ class HomeWidgets {
                   ),
                 )
               : ListView.builder(
-                  itemCount: serviceStore.listaClientes.length,
+                  itemCount: serviceStore.listCompanies.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, int index) {
-                    var item = serviceStore.listaClientes[index];
+                    var item = serviceStore.listCompanies[index];
                     return Column(
                       children: [
                         Padding(
@@ -548,58 +549,44 @@ class HomeWidgets {
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  Expanded(
-                                    flex: 5,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0.0, 0.0, 12.0, 0.0),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            child: Image.network(
-                                              'https://images.unsplash.com/photo-1611691543545-f19c70f74a29?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDQ0fHRvd0paRnNrcEdnfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-                                              width: 40.0,
-                                              height: 40.0,
-                                              fit: BoxFit.cover,
-                                            ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(0.0, 0.0, 12.0, 0.0),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          child: Image.network(
+                                            'https://images.unsplash.com/photo-1611691543545-f19c70f74a29?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDQ0fHRvd0paRnNrcEdnfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
+                                            width: 40.0,
+                                            height: 40.0,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            AutoSizeText(
-                                              '${item.name}',
-                                              style: FontsThemeModeApp(theme)
-                                                  .titleMedium,
-                                            ),
-                                            AutoSizeText(
-                                              '${item.id} Produtos Comprados',
-                                              style: FontsThemeModeApp(theme)
-                                                  .bodyMedium,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AutoSizeText(
+                                            item.company?.name ?? "",
+                                            style: FontsThemeModeApp(theme)
+                                                .titleMedium,
+                                          ),
+                                          Text(
+                                            ' ${item.address?.street}, ${item.address?.number} - ${item.address?.neighborhood} - ${item.address?.city} ',
+                                            style: FontsThemeModeApp(theme)
+                                                .bodyMedium,
+                                                overflow: TextOverflow.fade,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: theme.primary,
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                   
                                 ],
                               ),
                             ),
@@ -789,11 +776,13 @@ class HomeWidgets {
             ],
           ),
         ),
-        if (responsiveVisibility(context: context, phone: false, desktop: true, tablet: true))
-          Row(
-            children: [cardTransacoes(), cardBuget()],
-          ),
-        if (responsiveVisibility(context: context, phone: true, desktop: false, tablet: false))
+        if (responsiveVisibility(
+                context: context,
+                phone: false,
+                desktop: true,
+                tablet: true,
+                tabletLandscape: true) &&
+            kIsWeb)
           Column(
             children: [
               cardTransacoes(),
@@ -804,15 +793,39 @@ class HomeWidgets {
               )
             ],
           ),
-          SizedBox(
-            height: 20,
+        if (responsiveVisibility(
+                context: context,
+                phone: false,
+                desktop: true,
+                tablet: true,
+                tabletLandscape: true) &&
+            !kIsWeb)
+          Row(
+            children: [cardTransacoes(), cardBuget()],
           ),
-        
+        if (responsiveVisibility(
+          context: context,
+          phone: true,
+          desktop: false,
+          tablet: false,
+          tabletLandscape: false,
+        ))
+          Column(
+            children: [
+              cardTransacoes(),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
+                child: cardBuget(),
+              )
+            ],
+          ),
+        SizedBox(
+          height: 20,
+        ),
       ],
     );
   }
-
-
 
   Padding cardTransacoes() {
     return Padding(
@@ -889,7 +902,7 @@ class HomeWidgets {
                           ThemeModeApp.of(context).primaryText.withOpacity(0.1),
                     ),
                     cardListProduct(
-                        "https://w7.pngwing.com/pngs/81/46/png-transparent-coca-cola-logo-the-coca-cola-company-soft-drink-diet-coke-round-icon-coca-cola-camera-icon-phone-icon-happy-birthday-vector-images-thumbnail.png",
+                        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fpt%2Fsearch%2Fcoca-cola&psig=AOvVaw1CbshH4SfrTFvKYae9BY3P&ust=1714507206647000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKCUx5ub6IUDFQAAAAAdAAAAABAE",
                         "Coca-Cola",
                         "1.200"),
                   ]),

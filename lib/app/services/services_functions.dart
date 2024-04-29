@@ -161,11 +161,11 @@ class ServicesFunctions {
 
 
     // validade if cliente exist
-    final resp = await GetSupaBaseApi().findByNameClient({"name": cliente});
+    final resp = await GetSupaBaseApi().findByNameCompany({"name": cliente});
 
     // if client not exist create client
     if (resp.length == 0) {
-      final resp2 = await GetSupaBaseApi().createClient({"name": cliente});
+      final resp2 = await GetSupaBaseApi().createCompany({"name": cliente});
       if (resp2 is List<Map<String, dynamic>>) {
         log(name: "CREATE CLIENT", "Cliente criado com sucesso");
       } else {
@@ -174,7 +174,7 @@ class ServicesFunctions {
     }
 
     // get id client[
-    final resp3 = await GetSupaBaseApi().findByNameClient({"name": cliente});
+    final resp3 = await GetSupaBaseApi().findByNameCompany({"name": cliente});
     int idClient = resp3[0]["id"];
     // get geolocation
     Position? _position = await _getCurrentLocalization();

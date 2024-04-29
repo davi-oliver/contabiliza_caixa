@@ -22,11 +22,11 @@ class ServiceStore = _ServiceStoreBase with _$ServiceStore;
 
 abstract class _ServiceStoreBase with Store {
   ObservableList<Relatorio> listaCountDiario = ObservableList<Relatorio>();
-  ObservableList<ClientInfo> listaClientes = ObservableList<ClientInfo>();
+  ObservableList<CompanyInfo> listCompanies = ObservableList<CompanyInfo>();
 
  @action 
- void addListClientes(ClientInfo item) {
-   listaClientes.add(item);
+ void addListClientes(CompanyInfo item) {
+   listCompanies.add(item);
   }
   
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
@@ -57,18 +59,19 @@ class _ViewRelatorioState extends State<ViewRelatorio>
   late HomeStore homeStore;
   ThemeMode themeMode = ThemeModeApp.themeMode;
 
-  Future _getClients() async {
-    final rep = await GetSupaBaseApi().findAllClient();
+  Future _getCompanies() async {
+    final rep = await GetSupaBaseApi().findAllCompany();
     if (rep != []) {
       for (var element in rep) {
-        ClientInfo client = ClientInfo.fromJson(element);
+        CompanyInfo client = CompanyInfo.fromJson(element);
         serviceStore.addListClientes(client);
       }
     }
+    // log("Clientes: ${serviceStore.listCompanies.length}");
 
     // busca todas as vendas do dia
 
-    await ServicesFunctions(context).findAllSaleDay();
+    // await ServicesFunctions(context).findAllSaleDay();
     setState(() {});
     // set total day from sales
   }
@@ -76,7 +79,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
   var totalDay;
   @override
   void initState() {
-    _getClients();
+    _getCompanies();
     super.initState();
   }
 

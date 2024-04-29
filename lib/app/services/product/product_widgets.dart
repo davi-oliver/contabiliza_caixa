@@ -81,7 +81,7 @@ class ProductsWidgets {
         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
         child: Container(
           width: double.infinity,
-          height: 400.0,
+          height: 600.0,
           decoration: BoxDecoration(
             color: ThemeModeApp.of(context).primaryBackground,
             boxShadow:   [
@@ -149,15 +149,15 @@ class ProductsWidgets {
                                         // log("aaaaa ${solicitacaoComuniqueStore.soliciataoComuniqueListNaoEnviado[index].dataInsercao}");
                                         return GlobalsWidgets(context)
                                             .cardsSolicitacaoEmAndamento(
-                                          data: productStore.products[index]
-                                                  .dataInsercao ??
-                                              "02/02/2022",
-                                          status: "Cadastrado",
+                                          data: "${productStore.products[index]
+                                                  .quantityStock.toString()} em Estoque" ??
+                                              "2022",
+                                          status: "R\$ ${productStore.products[index].price.toString()} a Unidade",
                                           buttomTitle: 'Ver',
                                           subtitle:
-                                              "${productStore.products[index].descricao ?? "Sem descrição"}",
+                                              "${productStore.products[index].description ?? "Sem descrição"}",
                                           title:
-                                              "${productStore.products[index].nome ?? "Sem nome"}",
+                                              "${productStore.products[index].name ?? "Sem nome"}",
                                           onTap: () {},
                                         );
                                       },
