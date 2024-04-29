@@ -236,7 +236,7 @@ class HomeWidgets {
 
   Widget cardMenuProfile(ThemeModeApp theme) {
     return Container(
-      color: theme.primaryText.withOpacity(0.6),
+      color: theme.primaryBackground.withOpacity(0.6),
       child: Column(
         children: [
           Padding(
@@ -406,7 +406,7 @@ class HomeWidgets {
 
   Widget cardNotificationList(theme) {
     return Container(
-      color: theme.primaryText.withOpacity(0.6),
+      color: theme.primaryBackground.withOpacity(0.6),
       child: Column(
         children: [
           Padding(
@@ -789,11 +789,11 @@ class HomeWidgets {
             ],
           ),
         ),
-        if (responsiveVisibility(context: context, phone: false))
+        if (responsiveVisibility(context: context, phone: false, desktop: true, tablet: true))
           Row(
             children: [cardTransacoes(), cardBuget()],
           ),
-        if (responsiveVisibility(context: context, phone: true))
+        if (responsiveVisibility(context: context, phone: true, desktop: false, tablet: false))
           Column(
             children: [
               cardTransacoes(),
@@ -803,10 +803,16 @@ class HomeWidgets {
                 child: cardBuget(),
               )
             ],
-          )
+          ),
+          SizedBox(
+            height: 20,
+          ),
+        
       ],
     );
   }
+
+
 
   Padding cardTransacoes() {
     return Padding(

@@ -13,7 +13,7 @@ class StockPage extends StatefulWidget {
 
 class _StockPageState extends State<StockPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
@@ -21,13 +21,12 @@ class _StockPageState extends State<StockPage> {
       body: SafeArea(
         top: true,
         child: SliderDrawer(
-          appBar: const SliderAppBar(
-              appBarColor: Colors.white,
+          appBar: SliderAppBar(
+              appBarColor: ThemeModeApp.of(context).secondaryBackground,
+              drawerIconColor: ThemeModeApp.of(context).secondaryText,
               title: Text(" ",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
-          slider: HomeWidgets(context).drawerMenu(
-   
-          ),
+          slider: HomeWidgets(context).drawerMenu(),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,

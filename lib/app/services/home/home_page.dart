@@ -103,10 +103,10 @@ class _ViewRelatorioState extends State<ViewRelatorio>
       backgroundColor: theme.primaryBackground,
       body: GestureDetector(
         onTap: () {
-          if(homeStore.visibilityProfile){
+          if (homeStore.visibilityProfile) {
             homeStore.setVisibilityProfile(false);
           }
-          if(homeStore.visibilityNotification){
+          if (homeStore.visibilityNotification) {
             homeStore.setVisibilityNotification(false);
           }
         },
@@ -120,6 +120,7 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                 appBar: SliderAppBar(
                     appBarHeight: 110,
                     appBarColor: ThemeModeApp.of(context).primaryBackground,
+                    drawerIconColor: ThemeModeApp.of(context).secondaryText,
                     trailing: Row(
                       children: [
                         // alternate theme
@@ -175,10 +176,12 @@ class _ViewRelatorioState extends State<ViewRelatorio>
                           child: Container(
                               decoration: BoxDecoration(
                                 color: theme.primaryBackground,
-                                border: Border.all(color: theme.primary, width: 3),
+                                border:
+                                    Border.all(color: theme.primary, width: 3),
                                 borderRadius: BorderRadius.circular(50),
                               ),
-                              child: HomeWidgets(context).miniaturaFotoPerfil()),
+                              child:
+                                  HomeWidgets(context).miniaturaFotoPerfil()),
                         ),
                         SizedBox(
                           width: 20,

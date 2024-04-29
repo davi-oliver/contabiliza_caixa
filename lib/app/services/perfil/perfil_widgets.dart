@@ -3,7 +3,6 @@ import 'package:ga_proj/components/flutter_flow/flutter_flow_widgets.dart';
 import 'package:ga_proj/global/globals_routes.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class PerfilWidgets {
   BuildContext context;
@@ -15,7 +14,7 @@ class PerfilWidgets {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: ThemeModeApp.of(context).secondaryBackground,
+            color: ThemeModeApp.of(context).primaryBackground,
             boxShadow: [
               BoxShadow(
                 blurRadius: 1.0,
@@ -258,7 +257,16 @@ class PerfilWidgets {
             maxWidth: 1170.0,
           ),
           decoration: BoxDecoration(
-              color: ThemeModeApp.of(context).secondaryBackground),
+            color: ThemeModeApp.of(context).primaryBackground,
+            borderRadius: BorderRadius.circular(12.0),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 20.0,
+                color: ThemeModeApp.of(context).primaryText.withOpacity(0.1),
+                offset: Offset(0.0, 2.0),
+              )
+            ],
+          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -305,11 +313,12 @@ class PerfilWidgets {
               width: double.infinity,
               height: 60.0,
               decoration: BoxDecoration(
-                color: ThemeModeApp.of(context).secondaryBackground,
-                boxShadow: const [
+                color: ThemeModeApp.of(context).primaryBackground,
+                boxShadow: [
                   BoxShadow(
                     blurRadius: 5.0,
-                    color: Color(0x3416202A),
+                    color:
+                        ThemeModeApp.of(context).primaryText.withOpacity(0.1),
                     offset: Offset(0.0, 2.0),
                   )
                 ],
@@ -357,11 +366,12 @@ class PerfilWidgets {
               width: double.infinity,
               height: 60.0,
               decoration: BoxDecoration(
-                color: ThemeModeApp.of(context).secondaryBackground,
-                boxShadow: const [
+                color: ThemeModeApp.of(context).primaryBackground,
+                boxShadow: [
                   BoxShadow(
                     blurRadius: 5.0,
-                    color: Color(0x3416202A),
+                    color:
+                        ThemeModeApp.of(context).primaryText.withOpacity(0.1),
                     offset: Offset(0.0, 2.0),
                   )
                 ],
@@ -416,7 +426,7 @@ class PerfilWidgets {
                       const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   iconPadding:
                       const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: ThemeModeApp.of(context).secondaryBackground,
+                  color: ThemeModeApp.of(context).primaryBackground,
                   textStyle: ThemeModeApp.of(context).bodySmall.copyWith(
                         fontFamily: 'Lexend Deca',
                         color: ThemeModeApp.of(context).primaryText,

@@ -21,8 +21,9 @@ class _ProductPageState extends State<ProductPage> {
       body: SafeArea(
         top: true,
         child: SliderDrawer(
-          appBar: const SliderAppBar(
-              appBarColor: Colors.white,
+          appBar:   SliderAppBar(
+            drawerIconColor: ThemeModeApp.of(context).secondaryText,
+              appBarColor: ThemeModeApp.of(context).secondaryBackground,
               title: Text(" ",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
           slider: HomeWidgets(context).drawerMenu(
