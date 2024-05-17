@@ -9,3 +9,4 @@ const String companyPage = "companyPage";
 const String stockPage = "stockPage";
 const String configsPage = "configsPage";
 const String perfilPage = "perfilPage";
+const String formularioCadstroCompra = "formularioCadstroCompra";

@@ -1,14 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
- 
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ga_proj/app/services/home/home_page.dart';
 import 'package:ga_proj/app/services/services_functions.dart';
 import 'package:ga_proj/app/services/services_widgets.dart';
 import 'package:ga_proj/global/globals_fonts.dart';
-import 'package:provider/provider.dart'; 
+import 'package:ga_proj/global/globals_routes.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
 
 import '../../global/theme/theme_mode.dart';
@@ -20,22 +23,24 @@ class ContabilizaCaixaPage extends StatefulWidget {
   State<ContabilizaCaixaPage> createState() => _ContabilizaCaixaPageState();
 }
 
-class _ContabilizaCaixaPageState extends State<ContabilizaCaixaPage> with TickerProviderStateMixin {
+class _ContabilizaCaixaPageState extends State<ContabilizaCaixaPage>
+    with TickerProviderStateMixin {
   late ServiceStore serviceContabilizaCaixaStore;
   late ServiceStore serviceContabilizaCaixaStoreT;
   bool _carregando = true;
   // late AnimationController _controllerAnimation;
 
-  Future init () async {
-      await ServicesFunctions(context).initPage();
-      setState(() {
+  Future init() async {
+    await ServicesFunctions(context).initPage();
+    serviceContabilizaCaixaStore.addAllCompaniesSale(); 
+    setState(() {
       _carregando = false;
     });
   }
+
   @override
   void initState() {
     init();
-    Future.delayed(Duration(seconds: 5));
     super.initState();
   }
 
@@ -102,10 +107,7 @@ class _ContabilizaCaixaPageState extends State<ContabilizaCaixaPage> with Ticker
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ViewRelatorio()));
+                                context.pushNamed(homePage);
                               },
                               child: Icon(
                                 Icons.arrow_back_ios,
@@ -113,14 +115,12 @@ class _ContabilizaCaixaPageState extends State<ContabilizaCaixaPage> with Ticker
                               ),
                             ),
                             Text(
-                              'Contabiliza Caixa',
+                              'Nova Compra',
                               style: FontsThemeModeApp(theme).headlineSmall,
                             ),
                             IconButton(
                                 onPressed: () {
-                                  setState(() {
-                                     
-                                  });
+                                  setState(() {});
                                 },
                                 icon: Icon(
                                   FontAwesomeIcons.moon,

@@ -7,15 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ga_proj/app/services/sales/store/store_sale.dart';
-import 'package:ga_proj/app/services/services_functions.dart';
-import 'package:ga_proj/app/store/serviceStore.dart';
+import 'package:ga_proj/app/services/services_functions.dart'; 
 import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
 import 'package:intl/intl.dart';
 
-import 'package:provider/provider.dart';
-
-import '../../../global/globals_functions.dart';
+import 'package:provider/provider.dart'; 
 
 class RelatorioVendasPageDetalhes extends StatefulWidget {
   const RelatorioVendasPageDetalhes({super.key});

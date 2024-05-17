@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers
+// ignore_for_file: avoid_unnecessary_containers, must_be_immutable
 
 import 'dart:developer';
 
@@ -6,10 +6,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ga_proj/app/services/contabiliza_caixa_page.dart';
-import 'package:ga_proj/app/services/home/store/home_store.dart';
-import 'package:ga_proj/app/services/relatorio_vendas_detalhes/relatorio_vendas_page.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; 
+import 'package:ga_proj/app/services/home/store/home_store.dart'; 
 import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/components/flutter_flow/flutter_flow_widgets.dart';
@@ -17,8 +15,7 @@ import 'package:ga_proj/global/globals_fonts.dart';
 import 'package:ga_proj/global/globals_functions.dart';
 import 'package:ga_proj/global/globals_routes.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';
-import 'package:go_router/go_router.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:go_router/go_router.dart'; 
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -688,11 +685,7 @@ class HomeWidgets {
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const ContabilizaCaixaPage()));
+                                   context.pushNamed(formularioCadstroCompra);
                                   },
                                   child: Text('Cadastrar Compra',
                                       style: FontsThemeModeApp(theme)

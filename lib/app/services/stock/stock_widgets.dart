@@ -149,8 +149,7 @@ class StockWidgets{
                                         return GlobalsWidgets(context)
                                             .cardsSolicitacaoEmAndamento(
                                           data: "R\$ ${stockStore.products[index]
-                                                  .stock?.purchasePrice.toString()} a unidade" ??
-                                              "02/02/2022",
+                                                  .stock?.purchasePrice.toString()} a unidade" ,
                                           status: "Quantidade: ${stockStore.products[index].stock?.quantityPurchased ?? 0} ",
                                           buttomTitle: 'Ver',
                                           subtitle:

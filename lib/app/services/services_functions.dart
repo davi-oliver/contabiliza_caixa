@@ -2,21 +2,19 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ga_proj/app/local/local_storage.dart';
+import 'package:ga_proj/app/services/company/store/companies_store.dart';
 import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/backend/datasource/results.dart';
 import 'package:ga_proj/backend/db/api/get/get.supabase.service.dart';
 import 'package:ga_proj/global/globals_alert.dart';
-import 'package:ga_proj/models/item.dart';
 import 'package:ga_proj/models/product.dart';
 import 'package:ga_proj/models/sale.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 var valorTotal = "0,00";
@@ -27,22 +25,12 @@ class ServicesFunctions {
 
   Future initPage() async {
     final store = Provider.of<SaleStore>(context, listen: false);
-    final local = await LocalPath().localPayment;
-    final localProduct = await LocalPath().localProduct;
+ 
 
     store.itemSelectedPayment = null;
     store.itemSelectedProduct = null;
 
-    if (await localProduct.exists()) {
-      store.listItensProduct.clear();
-      var data = await jsonDecode(await localProduct.readAsString());
-      for (var element in data) {
-        Product item = Product.fromJson(element);
-        store.addListItensProduct(item);
-      }
-      log(name: "GET PRODUCT local", data.toString());
-      log(name: "Store Product", store.listItensProduct.length.toString());
-    } else if (!localProduct.existsSync()) {
+   
       store.listItensProduct.clear();
       var rep = await GetSupaBaseApi().findProductAll();
 
@@ -51,46 +39,23 @@ class ServicesFunctions {
           Product item = Product.fromJson(element);
           store.addListItensProduct(item);
         }
-        await localProduct.writeAsString(jsonEncode(rep));
+         
         // log local
-        log(name: "GET PRODUCT local", await localProduct.readAsString());
+        log(name: "GET PRODUCT local", rep.toString());
       } else {
         log(
             name: "GET PRODUCT",
             "Erro ao buscar dados ${rep.runtimeType.toString()}");
       }
       log(name: "Store Product", store.listItensProduct.length.toString());
-    }
 
-    if (local.existsSync()) {
-      store.listItensPayment.clear();
-      var data = await jsonDecode(await local.readAsString());
-      for (var element in data) {
-        ItemType item = ItemType.fromJson(element);
-        store.addListItensPayment(item);
-      }
-      log(name: "GET PAYMENT local", data.toString());
-      log(name: "Store Payment", store.listItensPayment.length.toString());
-    } else if (!local.existsSync()) {
-      store.listItensPayment.clear();
-      var rep = await GetSupaBaseApi().findAllPayment();
+   
+   
 
-      if (rep is List<Map<String, dynamic>>) {
-        for (var element in rep) {
-          ItemType item = ItemType.fromJson(element);
-          store.addListItensPayment(item);
-        }
-        await local.writeAsString(jsonEncode(rep));
-        // log local
-        log(name: "GET PAYMENT local", await local.readAsString());
-      } else {
-        log(
-            name: "GET PAYMENT",
-            "Erro ao buscar dados ${rep.runtimeType.toString()}");
-      }
-      log(name: "Store Payment", store.listItensPayment.length.toString());
-      return;
-    }
+
+     
+
+    
   }
 
   Future findAllSaleDay () async {
@@ -165,12 +130,8 @@ class ServicesFunctions {
 
     // if client not exist create client
     if (resp.length == 0) {
-      final resp2 = await GetSupaBaseApi().createCompany({"name": cliente});
-      if (resp2 is List<Map<String, dynamic>>) {
-        log(name: "CREATE CLIENT", "Cliente criado com sucesso");
-      } else {
-        log(name: "CREATE CLIENT", "Erro ao criar cliente");
-      }
+       await GetSupaBaseApi().createCompany({"name": cliente});
+    
     }
 
     // get id client[

@@ -1,11 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert'; 
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:ga_proj/models/client_info.dart'; 
+import 'package:ga_proj/models/client_info.dart';
 import 'package:mobx/mobx.dart';
-  
 
 part 'serviceStore.g.dart';
 
@@ -23,12 +22,21 @@ class ServiceStore = _ServiceStoreBase with _$ServiceStore;
 abstract class _ServiceStoreBase with Store {
   ObservableList<Relatorio> listaCountDiario = ObservableList<Relatorio>();
   ObservableList<CompanyInfo> listCompanies = ObservableList<CompanyInfo>();
+  ObservableList<String> listCompaniesSale = ObservableList<String>();
 
- @action 
- void addListClientes(CompanyInfo item) {
-   listCompanies.add(item);
+  @action
+  void addAllCompaniesSale() {
+    if (listCompanies.isNotEmpty) {
+      listCompanies.forEach((element) {
+        listCompaniesSale.add(element.company!.name ?? "");
+      });
+    }
   }
-  
+
+  @action
+  void addListClientes(CompanyInfo item) {
+    listCompanies.add(item);
+  }
 
   // Define as horas de início e fim do expediente do trabalhador
   int startHour = 8;

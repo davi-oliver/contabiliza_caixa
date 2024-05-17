@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison, unused_local_variable
+
 import 'dart:developer';
 
 import 'package:ga_proj/backend/db.supabase.dart';

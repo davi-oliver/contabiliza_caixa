@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -157,7 +158,7 @@ class ContabilizaCaixaWidgets {
                           items: store.listItensProduct.map((Product item) {
                             return DropdownMenuItem<Product?>(
                               value: item,
-                              child: Text(item.name?? ""),
+                              child: Text(item.name ?? ""),
                             );
                           }).toList(),
                           borderRadius:
@@ -181,23 +182,27 @@ class ContabilizaCaixaWidgets {
                   });
                 }),
 
-                FFButtonWidget(text: "Cadastrar Produto", onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: ((context) {
-                    return AdicionarProdutoPage();
-                  
-                  })));
-                }, options: FFButtonOptions(
-                  width: 130,
-                  height: 40,
-                  color: theme.tertiary,
-                  textStyle: FontsThemeModeApp(theme).buttonStyle,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 0,
+                FFButtonWidget(
+                  text: "Cadastrar Produto",
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) {
+                      return const AdicionarProdutoPage();
+                    })));
+                  },
+                  options: FFButtonOptions(
+                    width: 130,
+                    height: 40,
+                    color: theme.tertiary,
+                    textStyle: FontsThemeModeApp(theme).buttonStyle,
+                    borderSide: const BorderSide(
+                      color: Colors.transparent,
+                      width: 0,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                  borderRadius: BorderRadius.circular(5),
-                ),),
-                
+                ),
+
                 TextFieldCampo(
                   titulo: 'Preço',
                   onChanged: (p0) {
@@ -216,7 +221,7 @@ class ContabilizaCaixaWidgets {
                   controllador: controllerPreco,
                 ),
                 TextFieldCampo(
-                  titulo: 'Cliente',
+                  titulo: 'Fornecedor',
                   icon: Icon(
                     Icons.person,
                     color: theme.accent1,
@@ -229,9 +234,41 @@ class ContabilizaCaixaWidgets {
                   numero: false,
                   controllador: controlladorCliente,
                 ),
+
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .02,
                 ),
+                Container(
+                    padding: const EdgeInsets.all(10),
+                    alignment: Alignment.center,
+                    child: EasyAutocomplete(
+                        suggestions:
+                            serviceContabilizaCaixaStoreT.listCompaniesSale,
+                        cursorColor: Colors.purple,
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 10),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: const BorderSide(
+                                    color: Colors.purple,
+                                    style: BorderStyle.solid)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: const BorderSide(
+                                    color: Colors.purple,
+                                    style: BorderStyle.solid))),
+                        suggestionBuilder: (data) {
+                          return Container(
+                              margin: const EdgeInsets.all(1),
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color: Colors.white30,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(data,
+                                  style: ThemeModeApp.of(context).bodyLarge));
+                        },
+                        onChanged: (value) => print(value))),
 
                 StatefulBuilder(builder: (context, StateSetter setState) {
                   return Observer(builder: (_) {
@@ -339,7 +376,7 @@ class ContabilizaCaixaWidgets {
                   if (controlladorQtd.text.isEmpty) {
                     return ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Adicione a quantidade"),
+                        content: const Text("Adicione a quantidade"),
                         backgroundColor: theme.error,
                       ),
                     );
@@ -348,7 +385,7 @@ class ContabilizaCaixaWidgets {
                   if (controllerPreco.text.isEmpty) {
                     return ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Adicione o preço"),
+                        content: const Text("Adicione o preço"),
                         backgroundColor: theme.error,
                       ),
                     );
@@ -357,7 +394,7 @@ class ContabilizaCaixaWidgets {
                   if (controlladorCliente.text.isEmpty) {
                     return ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Adicione o nome do cliente"),
+                        content: const Text("Adicione o nome do cliente"),
                         backgroundColor: theme.error,
                       ),
                     );
@@ -366,7 +403,7 @@ class ContabilizaCaixaWidgets {
                   if (serviceContabilizaCaixaStore.valorTotal == "0,00") {
                     return ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Adicione o valor total"),
+                        content: const Text("Adicione o valor total"),
                         backgroundColor: theme.error,
                       ),
                     );
@@ -375,26 +412,23 @@ class ContabilizaCaixaWidgets {
                   if (store.itemSelectedPayment == null) {
                     return ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Selecione o tipo de pagamento"),
+                        content: const Text("Selecione o tipo de pagamento"),
                         backgroundColor: theme.error,
                       ),
                     );
                   }
                   serviceContabilizaCaixaStore.setLoading(true);
-                  Results result = await ServicesFunctions(context)
-                      .createSale(
-                          quantidade: controlladorQtd.text,
-                          valorTotal:
-                              serviceContabilizaCaixaStore.valorTotal,
-                          valorUnidade:
-                              serviceContabilizaCaixaStore.valorUnidade,
-                          cliente: controlladorCliente.text,
-                          productId: store.itemSelectedProduct.id,
-                          pagamentoId: store.itemSelectedPayment!.id);
+                  Results result = await ServicesFunctions(context).createSale(
+                      quantidade: controlladorQtd.text,
+                      valorTotal: serviceContabilizaCaixaStore.valorTotal,
+                      valorUnidade: serviceContabilizaCaixaStore.valorUnidade,
+                      cliente: controlladorCliente.text,
+                      productId: store.itemSelectedProduct.id,
+                      pagamentoId: store.itemSelectedPayment!.id);
                   if (result.sucess) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Venda adicionada com sucesso"),
+                        content: const Text("Venda adicionada com sucesso"),
                         backgroundColor: theme.success,
                       ),
                     );
@@ -405,17 +439,15 @@ class ContabilizaCaixaWidgets {
                     serviceContabilizaCaixaStore.setValorUnidade();
 
                     context.pushNamed(homePage);
-                  }
-                  else {
+                  } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Erro ao adicionar venda"),
+                        content: const Text("Erro ao adicionar venda"),
                         backgroundColor: theme.error,
                       ),
                     );
                   }
                   serviceContabilizaCaixaStore.setLoading(false);
-                  // ignore: use_build_context_synchronously
                 },
                 text: 'Salvar',
                 options: FFButtonOptions(
@@ -423,7 +455,7 @@ class ContabilizaCaixaWidgets {
                   height: 40,
                   color: theme.tertiary,
                   textStyle: FontsThemeModeApp(theme).buttonStyle,
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: Colors.transparent,
                     width: 0,
                   ),

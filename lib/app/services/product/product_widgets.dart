@@ -9,6 +9,73 @@ class ProductsWidgets {
   BuildContext context;
   ProductsWidgets(this.context);
 
+  
+  Widget widgetCreateProduct() {
+    return Expanded(
+      child: Align(
+        alignment: const AlignmentDirectional(0.00, -1.00),
+        child: Container(
+          width: double.infinity,
+    
+          constraints: const BoxConstraints(
+            maxWidth: 1170.0,
+          ),
+          decoration: BoxDecoration(
+              color: ThemeModeApp.of(context).secondaryBackground),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // perfilFotoName(),
+                // linhaAlterarTema(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          24.0, 12.0, 0.0, 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            "Produtos",
+                            style: ThemeModeApp.of(context).headlineLarge,
+                          ),
+                          SizedBox(
+                            width: 8.0,
+                          ),
+                          Icon(Icons.info_outline_rounded,
+                              color: ThemeModeApp.of(context).secondaryText),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Aqui você pode cadastrar um novo produto",
+                            style: ThemeModeApp.of(context).labelMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                // botoesConfiguracaoEConta(),
+        
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget widgetPrincipal() {
     return Expanded(
       child: Align(
@@ -150,8 +217,7 @@ class ProductsWidgets {
                                         return GlobalsWidgets(context)
                                             .cardsSolicitacaoEmAndamento(
                                           data: "${productStore.products[index]
-                                                  .quantityStock.toString()} em Estoque" ??
-                                              "2022",
+                                                  .quantityStock.toString()} em Estoque",
                                           status: "R\$ ${productStore.products[index].price.toString()} a Unidade",
                                           buttomTitle: 'Ver',
                                           subtitle:

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:ga_proj/app/services/company/store/companies_store.dart';
+import 'package:flutter_mobx/flutter_mobx.dart'; 
 import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/global/globals_widgets.dart';
 import 'package:ga_proj/global/theme/theme_mode.dart';

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -11,7 +10,6 @@ import 'package:ga_proj/backend/db/api/get/get.supabase.service.dart';
 import 'package:ga_proj/models/client_info.dart';
 import 'package:provider/provider.dart';
 import '../../../global/theme/theme_mode.dart';
-import '../services_functions.dart';
 
 class MyWidget extends StatefulWidget {
   const MyWidget({super.key});

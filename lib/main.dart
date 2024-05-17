@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ga_proj/app/services/company/store/companies_store.dart';
@@ -8,13 +9,13 @@ import 'package:ga_proj/app/services/perfil/store/perfil_store.dart';
 import 'package:ga_proj/app/services/product/store/product_store.dart';
 import 'package:ga_proj/app/services/sales/store/store_sale.dart';
 import 'package:ga_proj/app/services/stock/store/stock_store.dart';
-import 'package:ga_proj/app/store/serviceStore.dart'; 
+import 'package:ga_proj/app/store/serviceStore.dart';
 import 'package:ga_proj/components/flutter_flow/internationalization.dart';
 import 'package:ga_proj/components/flutter_flow/nav/nav.dart';
 import 'package:ga_proj/global/store/global_store.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
- import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'global/theme/theme_mode.dart';
 
 void main() async {
@@ -24,7 +25,8 @@ void main() async {
   ]);
   await Supabase.initialize(
     url: 'https://rtsrqjtzvwjslrjhwnpv.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0c3JxanR6dndqc2xyamh3bnB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MzYzMDMsImV4cCI6MjAyOTQxMjMwM30.bIFvyxhoVGoIinGIlXxpiP8rDr6GVkBFcKfl7o039ys',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0c3JxanR6dndqc2xyamh3bnB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MzYzMDMsImV4cCI6MjAyOTQxMjMwM30.bIFvyxhoVGoIinGIlXxpiP8rDr6GVkBFcKfl7o039ys',
   );
   runApp(MultiProvider(
     providers: [
@@ -38,13 +40,10 @@ void main() async {
       Provider<ProductStore>(create: (_) => ProductStore()),
       Provider<StockStore>(create: (_) => StockStore()),
       Provider<CompaniesStore>(create: (_) => CompaniesStore()),
-
- 
     ],
     child: MyApp(),
   ));
 }
-
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
@@ -104,10 +103,12 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         scrollbarTheme: ScrollbarThemeData(),
       ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        scrollbarTheme: ScrollbarThemeData(),
-      ),
+      darkTheme: kIsWeb
+          ? ThemeData.light()
+          : ThemeData(
+              brightness: Brightness.dark,
+              scrollbarTheme: ScrollbarThemeData(),
+            ),
       themeMode: _themeMode,
       routerConfig: _router,
     );

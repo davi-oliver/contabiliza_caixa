@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ga_proj/app/services/company/company_page.dart';
+import 'package:ga_proj/app/services/contabiliza_caixa_page.dart';
 import 'package:ga_proj/app/services/home/home_page.dart';
 import 'package:ga_proj/app/services/login/page/create_page.dart';
 import 'package:ga_proj/app/services/login/page/login_page.dart';
@@ -13,7 +14,6 @@ import 'package:ga_proj/app/services/stock/stock_page.dart';
 import 'package:ga_proj/components/flutter_flow/flutter_flow_util.dart';
 import 'package:ga_proj/components/flutter_flow/nav/serialization_util.dart';
 import 'package:ga_proj/global/globals_routes.dart';
-import 'package:ga_proj/models/product.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -115,6 +115,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               name: configsPage,
               path: configsPage,
               builder: (context, params) => const ConfigsWidget(),
+            ),
+            FFRoute(
+              name: formularioCadstroCompra,
+              path: formularioCadstroCompra,
+              builder: (context, params) => const ContabilizaCaixaPage(),
             ),
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ),

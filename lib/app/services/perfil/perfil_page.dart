@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:ga_proj/app/services/home/home_widgets.dart';
 import 'package:ga_proj/app/services/perfil/perfil_widgets.dart';
-import 'package:ga_proj/global/theme/theme_mode.dart'; 
-import 'package:provider/provider.dart';
+import 'package:ga_proj/global/theme/theme_mode.dart';  
 
 class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
